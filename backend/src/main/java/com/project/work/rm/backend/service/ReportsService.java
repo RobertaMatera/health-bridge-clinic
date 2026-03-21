@@ -89,6 +89,16 @@ public class ReportsService {
                 .orElseThrow(() -> new RuntimeException("Report not found with id: " + reportID));
     }
 
+    public List<ReportDTO> getReportsByPatientAndStatus(Long patientID, ReportStatus reportStatus) {
+        User patient = usersRepository.findById(patientID)
+                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + patientID));
+
+        return reportsRepository.findByPatientAndStatus(patient, reportStatus)
+                .stream()
+                .map(reportsMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
     private void checkUpdatableStatus(Report report, boolean isFinalizing) {
         if (report.getStatus() != ReportStatus.IN_PROGRESS && report.getStatus() != ReportStatus.CREATED) {
             String action = isFinalizing ? "finalized" : "modified";
