@@ -4,5 +4,5 @@ export interface BaseModel {
   id?: number;
   createdAt?: Date;
   createdBy?: User;
-  updateAt?: Date;
+  updatedAt?: Date;
 }

@@ -15,9 +15,9 @@
         <dd>{{ report.createdBy }}</dd>
       }
 
-      @if (report.updateAt) {
+      @if (report.updatedAt) {
         <dt>Modificato</dt>
-        <dd>{{ report.updateAt | date }}</dd>
+        <dd>{{ report.updatedAt | date }}</dd>
       }
 
       @if (report.finalizedAt) {

@@ -22,16 +22,27 @@
     }
   </div>
 
-  <div class="flex justify-end mt-5">
-    <button
-      class="button"
-      [disabled]="form.invalid"
-      (click)="onSubmitClick($event)">
-      @if (isEditing()) {
+  <div class="flex justify-end gap-2 mt-5">
+    @if (isEditing()) {
+      <button
+        class="button button-danger"
+        [disabled]="form.invalid || report()?.exams?.length === 0"
+        (click)="onFinalizeClick($event)">
+        Finalizza
+      </button>
+      <button
+        class="button"
+        [disabled]="form.invalid || report()?.status === ReportStatus.FINALIZED"
+        (click)="onSubmitClick($event)">
         Salva
-      } @else {
+      </button>
+    } @else {
+      <button
+        class="button"
+        [disabled]="form.invalid"
+        (click)="onSubmitClick($event)">
         Crea
-      }
-    </button>
+      </button>
+    }
   </div>
 </form>

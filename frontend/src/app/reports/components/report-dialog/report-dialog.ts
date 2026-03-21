@@ -23,7 +23,7 @@ export class ReportDialog implements OnInit {
   patients = signal<User[]>([]);
 
   ngOnInit() {
-    this.usersService.getAll()
+    this.usersService.getPatients()
       .subscribe(users => {
         this.patients.set(users);
       });
