@@ -14,6 +14,7 @@ export class ReportForm implements OnInit {
   patients = input<User[]>([]);
   report = input<Report>();
   submit = output<Report>();
+  finalize = output<Report>();
 
   patientFormControl = new FormControl<User | null>(null, Validators.required);
   outcomeFormControl = new FormControl<string | null>(null);
@@ -38,6 +39,20 @@ export class ReportForm implements OnInit {
     }
 
     this.submit.emit({
+      id: this.report()?.id,
+      patient: this.patientFormControl.value!,
+      outcome: this.outcomeFormControl.value
+    });
+  }
+
+  onFinalizeClick(event: PointerEvent) {
+    event.preventDefault();
+
+    if (!this.form.valid) {
+      return;
+    }
+
+    this.finalize.emit({
       id: this.report()?.id,
       patient: this.patientFormControl.value!,
       outcome: this.outcomeFormControl.value

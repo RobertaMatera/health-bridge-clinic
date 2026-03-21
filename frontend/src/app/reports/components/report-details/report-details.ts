@@ -6,6 +6,7 @@ import {ExamsService} from '@app/exams/services/exams-service';
 import {ReportsService} from '@app/reports/services/reports-service';
 import {ReportForm} from '@app/reports/components/report-form/report-form';
 import {AlertsService, AlertType} from '@app/commons/services/alerts-service';
+import {ReportStatus} from '@app/reports/models/report-status-enum';
 
 @Component({
   selector: 'app-report-details',
@@ -16,6 +17,8 @@ import {AlertsService, AlertType} from '@app/commons/services/alerts-service';
   templateUrl: './report-details.html'
 })
 export class ReportDetails {
+  ReportStatus = ReportStatus;
+
   examsService = inject(ExamsService);
   reportsService = inject(ReportsService);
   alertsService = inject(AlertsService);
@@ -50,6 +53,18 @@ export class ReportDetails {
     }
 
     this.reportsService.update(updatedReport.id, updatedReport)
+      .subscribe({
+        next: () => this.change.emit(),
+        error: error => this.alertsService.showAlert(error.message, AlertType.ERROR)
+      });
+  }
+
+  finalizeReport(updatedReport: Report) {
+    if (!updatedReport.id) {
+      return;
+    }
+
+    this.reportsService.finalize(updatedReport.id, updatedReport)
       .subscribe({
         next: () => this.change.emit(),
         error: error => this.alertsService.showAlert(error.message, AlertType.ERROR)

@@ -41,12 +41,16 @@
 <div class="flex justify-end mt-3">
   <button
     class="button"
+    [disabled]="report().status === ReportStatus.FINALIZED"
     (click)="openCreateExamDialog()">Crea
   </button>
 </div>
 
 <h2>Esito</h2>
-<app-report-form [report]="report()" (submit)="saveReport($event)"></app-report-form>
+<app-report-form
+  [report]="report()"
+  (submit)="saveReport($event)"
+  (finalize)="finalizeReport($event)"></app-report-form>
 
 @if (editingExam(); as exam) {
   <app-exam-dialog

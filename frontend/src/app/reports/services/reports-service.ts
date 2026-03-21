@@ -36,6 +36,10 @@ export class ReportsService {
     return this.httpClient.put<Report>(`${environment.backendUrl}/reports/${reportID}`, updatedReport);
   }
 
+  finalize(reportID: number, updatedReport: Report): Observable<Report> {
+    return this.httpClient.put<Report>(`${environment.backendUrl}/reports/${reportID}/finalize`, updatedReport);
+  }
+
   createExam(reportID: number, exam: Exam): Observable<Exam> {
     return this.httpClient.post<Exam>(`${environment.backendUrl}/reports/${reportID}/exams`, exam);
   }
