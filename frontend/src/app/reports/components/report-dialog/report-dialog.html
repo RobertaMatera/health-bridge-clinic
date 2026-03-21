@@ -1,0 +1,18 @@
+<div class="dialog-backdrop">
+  <div class="dialog-content">
+      <div class="flex items-center justify-between mb-3">
+        <h2> Nuovo referto</h2>
+        <i
+          class="fa-solid fa-lg fa-xmark cursor-pointer p-5"
+          (click)="dismiss.emit()"></i>
+      </div>
+
+      @if (error(); as errorMessage) {
+        <div class="error-message mb-3">
+          {{ errorMessage }}
+        </div>
+      }
+
+    <app-report-form [patients]="patients()" (submit)="onFormSubmit($event)"></app-report-form>
+  </div>
+</div>

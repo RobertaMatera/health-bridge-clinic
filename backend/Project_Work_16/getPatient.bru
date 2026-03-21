@@ -1,0 +1,20 @@
+meta {
+  name: getPatient
+  type: http
+  seq: 8
+}
+
+get {
+  url: http://localhost:8080/users/patients
+  body: none
+  auth: basic
+}
+
+auth:basic {
+  username: claudiarossi@gmail.com
+  password: doctor1
+}
+
+settings {
+  encodeUrl: true
+}

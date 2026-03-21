@@ -1,0 +1,32 @@
+meta {
+  name: updateReport
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:8080/reports/3
+  body: json
+  auth: basic
+}
+
+auth:basic {
+  username: claudiarossi@gmail.com
+  password: doctor1
+}
+
+body:json {
+  {
+    "patient": {
+      "firstName":"Giuseppe",
+      "lastName": "Massari",
+      "email": "g.massari@gmail.com",
+      "role": "PATIENT"
+    },
+    "outcome": ""
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,0 +1,32 @@
+meta {
+  name: createExam
+  type: http
+  seq: 7
+}
+
+post {
+  url: http://localhost:8080/reports/1/exams
+  body: json
+  auth: basic
+}
+
+headers {
+  : 
+}
+
+auth:basic {
+  username: claudiarossi@gmail.com
+  password: doctor1
+}
+
+body:json {
+  {
+    "analysis":"RBC",
+    "unitOfMeasure": "mln/µL",
+    "examValue": "10"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

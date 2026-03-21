@@ -1,0 +1,51 @@
+<h1>Referti</h1>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Paziente</th>
+    <th>Stato</th>
+    <th>Analisi</th>
+  </tr>
+  </thead>
+  <tbody>
+    @if (!loading() && reports().length === 0) {
+      <tr>
+        <td
+          colspan="4"
+          class="text-gray-500 py-5">Nessun referto presente
+        </td>
+      </tr>
+    }
+
+    @for (report of reports(); track report.id) {
+      <tr
+        [routerLink]="['/reports', report.id]"
+        class="cursor-pointer">
+        <td>{{ report.id }}</td>
+        <td>
+          <app-user-badge [user]="report.patient"></app-user-badge>
+        </td>
+        <td>
+          <app-report-status-badge [status]="report.status"></app-report-status-badge>
+        </td>
+        <td>
+          {{ report.exams?.length ?? 0 }}
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+
+<div class="flex justify-end mt-5" [appHasRole]="UserRole.DOCTOR">
+  <a
+    class="button"
+    (click)="showCreateDialog.set(true)">Crea</a>
+</div>
+
+@if (showCreateDialog()) {
+  <app-report-dialog
+    (dismiss)="showCreateDialog.set(false)"
+    (confirm)="onReportDialogConfirm($event)"></app-report-dialog>
+}

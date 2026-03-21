@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+.navbar-link {
+  @apply block cursor-pointer font-medium py-2 pl-3 pr-4 text-gray-700 hover:text-purple-700 lg:p-0;
+}

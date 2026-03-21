@@ -1,0 +1,22 @@
+<app-navbar></app-navbar>
+
+<div class="mx-auto max-w-7xl px-6">
+  <router-outlet></router-outlet>
+</div>
+
+@if (alertsService.errorMessage(); as errorMessage) {
+  <div class="alert-backdrop">
+    <div class="error-message flex justify-between items-start gap-5">
+      <div class="flex items-center gap-2">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <span
+        class="cursor-pointer"
+        (click)="alertsService.clear()">
+      <i class="fa-solid fa-xmark"></i>
+    </span>
+    </div>
+  </div>
+}

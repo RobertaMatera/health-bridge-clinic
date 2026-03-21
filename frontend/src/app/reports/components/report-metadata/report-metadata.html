@@ -1,0 +1,29 @@
+@if (report(); as report) {
+  <h3>Paziente</h3>
+  <div class="island mb-5">
+    <app-user-badge [user]="report.patient"></app-user-badge>
+  </div>
+
+  <h3>Dettagli</h3>
+  <div class="island mb-5">
+    <dl>
+      <dt>Creato</dt>
+      <dd>{{ report.createdAt | date }}</dd>
+
+      @if (report.createdBy) {
+        <dt>Da</dt>
+        <dd>{{ report.createdBy }}</dd>
+      }
+
+      @if (report.updateAt) {
+        <dt>Modificato</dt>
+        <dd>{{ report.updateAt | date }}</dd>
+      }
+
+      @if (report.finalizedAt) {
+        <dt>Finalizzato</dt>
+        <dd>{{ report.finalizedAt | date }}</dd>
+      }
+    </dl>
+  </div>
+}

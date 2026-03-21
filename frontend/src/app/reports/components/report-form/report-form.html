@@ -1,0 +1,37 @@
+<form>
+  <div class="form-control">
+    @if (isEditing()) {
+      <div class="form-control full-width">
+        <textarea
+          rows="5"
+          [formControl]="outcomeFormControl"></textarea>
+      </div>
+    } @else {
+      <label for="patient">Paziente</label>
+      <select
+        id="patient"
+        [formControl]="patientFormControl">
+        <option
+          id="patient"
+          [value]="null">Seleziona un paziente
+        </option>
+        @for (patient of patients(); track patient.id) {
+          <option [ngValue]="patient">{{ `${patient.lastName} ${patient.firstName}` }} ({{ patient.email }})</option>
+        }
+      </select>
+    }
+  </div>
+
+  <div class="flex justify-end mt-5">
+    <button
+      class="button"
+      [disabled]="form.invalid"
+      (click)="onSubmitClick($event)">
+      @if (isEditing()) {
+        Salva
+      } @else {
+        Crea
+      }
+    </button>
+  </div>
+</form>

@@ -1,0 +1,17 @@
+@if (report(); as report) {
+  <div class="grid grid-cols-12">
+    <div class="col-span-12 mb-5 md:col-span-8">
+      <h1>
+        Dettaglio referto #{{ report.id }}
+        <app-report-status-badge
+          class="ms-3"
+          [status]="report.status"></app-report-status-badge>
+      </h1>
+      <app-report-details [report]="report" (change)="loadData()"></app-report-details>
+    </div>
+
+    <div class="col-span-12 md:col-span-4 md:ps-5">
+      <app-report-metadata [report]="report"></app-report-metadata>
+    </div>
+  </div>
+}

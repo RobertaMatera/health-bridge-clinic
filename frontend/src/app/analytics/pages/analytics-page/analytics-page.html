@@ -1,0 +1,8 @@
+<h1>Statistiche</h1>
+<div class="island">
+  @if (analytics(); as analytics) {
+    <div><strong>{{ analytics.createdReports }}</strong> referti creati</div>
+    <div><strong>{{ analytics.inProgressReports }}</strong> referti in corso</div>
+    <div><strong>{{ analytics.finalizedReports }}</strong> referti finalizzati</div>
+  }
+</div>

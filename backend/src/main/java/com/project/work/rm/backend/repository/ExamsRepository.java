@@ -1,0 +1,10 @@
+package com.project.work.rm.backend.repository;
+
+import com.project.work.rm.backend.model.Exam;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
+
+public interface ExamsRepository extends JpaRepository<Exam, Long>  {
+    List<Exam> findByReportId(Long reportId);
+}

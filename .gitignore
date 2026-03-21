@@ -1,0 +1,130 @@
+# ===== BACKEND (Spring Boot / Maven) =====
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.idea/
+backend/*.iml
+backend/*.iws
+backend/*.ipr
+backend/.DS_Store
+backend/out/
+backend/build/
+backend/.gradle/
+backend/bin/
+*.lst
+
+# Maven
+backend/.mvn/
+backend/pom.xml.tag
+backend/pom.xml.releaseBackup
+backend/release.properties
+backend/dependency-reduced-pom.xml
+
+# IDE
+backend/.vscode/
+backend/nbproject/
+backend/rebel.xml
+
+# Logs
+backend/logs/
+backend/*.log
+backend/*.log.*
+
+# Database
+backend/data/
+backend/*.h2.db
+backend/*.mv.db
+
+# Environment variables
+backend/.env
+backend/.env.local
+backend/.env.*.local
+
+# ===== FRONTEND (Angular) =====
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/out-tsc/
+
+# IDEs
+frontend/.vscode/*
+frontend/.idea/
+frontend/*.swp
+frontend/*.swo
+frontend/*~
+frontend/.DS_Store
+
+# Angular CLI
+frontend/.angular/cache/
+frontend/.angular/tmp/
+
+# Dependencies
+frontend/package-lock.json
+frontend/yarn.lock
+frontend/pnpm-lock.yaml
+
+# IDE
+frontend/.settings/
+frontend/.classpath
+frontend/.c9/
+frontend/*.launch
+frontend/.sublime-workspace
+frontend/.project
+frontend/.pydevproject
+frontend/.factorypath
+
+# Environment variables
+frontend/.env
+frontend/.env.local
+frontend/.env.*.local
+
+# OS
+frontend/.DS_Store
+frontend/Thumbs.db
+
+# ===== GENERALE (root) =====
+.DS_Store
+.env
+.env.local
+.env.*.local
+*.swp
+*.swo
+*~
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+node_modules/
+dist/
+build/
+out/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# IDE
+.netlify/
+.vercel/
+
+# Temporary files
+*.tmp
+*.bak
+*.swp
+*~
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+*.db

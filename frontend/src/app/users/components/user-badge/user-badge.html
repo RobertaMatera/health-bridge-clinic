@@ -1,0 +1,10 @@
+<div class="flex items-center gap-2">
+  <img
+    src="{{avatarUrl()}}"
+    alt="Avatar"
+    class="rounded-full border-2 border-indigo-500 w-9 shadow"/>
+  <div class="flex flex-col">
+    <span class="text-sm">{{ user().firstName }} {{ user().lastName }}</span>
+    <span class="text-xs text-gray-500">{{ user().email }}</span>
+  </div>
+</div>

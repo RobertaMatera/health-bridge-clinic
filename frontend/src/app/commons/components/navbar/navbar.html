@@ -1,0 +1,60 @@
+@if (loggedIn()) {
+    <nav class="island py-5! mt-5 mx-6 z-10 relative">
+      <div class="flex flex-wrap items-center justify-between max-w-7xl">
+        <app-logo></app-logo>
+
+        <div class="flex items-center lg:order-2">
+          <div class="hidden mt-2 mr-4 sm:inline-block">
+            <span></span>
+          </div>
+
+          <button
+            (click)="toggleMenu()"
+            type="button"
+            class="inline-flex items-center p-2 ml-1 text-sm text-gray-500 rounded-lg lg:hidden  focus:outline-none"
+            [attr.aria-expanded]="menuOpen()">
+            @if (!menuOpen()) {
+              <i class="fa-solid fa-bars fa-xl"></i>
+            } @else {
+              <i class="fa-solid fa-xmark fa-xl"></i>
+            }
+          </button>
+        </div>
+
+        <div
+          class="items-center w-full lg:flex lg:w-auto lg:order-1"
+          [class.hidden]="!menuOpen()"
+          id="mobile-menu-2">
+          <ul class="flex flex-col mt-4 lg:flex-row lg:space-x-8 lg:mt-0">
+            <li>
+              <a
+                routerLink="/reports"
+                routerLinkActive="!text-purple-700"
+                (click)="closeMenu()"
+                class="navbar-link">Referti</a>
+            </li>
+            <li [appHasRole]="UserRole.DOCTOR">
+              <a
+                routerLink="/analytics"
+                routerLinkActive="!text-purple-700"
+                (click)="closeMenu()"
+                class="navbar-link">Statistiche</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="flex justify-between items-center border border-gray-200 rounded-xl pt-8 -mt-5 z-0 pb-3 px-5 mb-10 mx-6 shadow">
+      <div class="flex gap-5 items-center">
+        <app-user-badge [user]="user()!"></app-user-badge>
+        <app-user-role-badge [role]="user()!.role"></app-user-role-badge>
+      </div>
+
+      <a
+        (click)="logout()"
+        class="navbar-link">
+        Logout
+      </a>
+    </div>
+}
