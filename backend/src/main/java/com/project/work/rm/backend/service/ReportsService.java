@@ -90,7 +90,7 @@ public class ReportsService {
     }
 
     private void checkUpdatableStatus(Report report, boolean isFinalizing) {
-        if (report.getStatus() != ReportStatus.IN_PROGRESS || report.getStatus() != ReportStatus.CREATED) {
+        if (report.getStatus() != ReportStatus.IN_PROGRESS && report.getStatus() != ReportStatus.CREATED) {
             String action = isFinalizing ? "finalized" : "modified";
             throw new IllegalStateException("Report can only be " + action + " when in IN_PROGRESS or CREATED status.");
         }
