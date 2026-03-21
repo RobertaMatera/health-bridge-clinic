@@ -27,6 +27,7 @@ export class LoginPage {
     password: this.passwordFormControl
   });
 
+  showPassword = signal(false);
   errorMessage = signal<string | null>(null);
 
   login(event: Event) {
