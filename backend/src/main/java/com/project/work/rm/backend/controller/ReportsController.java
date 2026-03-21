@@ -89,4 +89,15 @@ public class ReportsController {
     public List<ReportDTO> getFinalizedByPatient(@PathVariable Long patientID) {
         return reportsService.getReportsByPatientAndStatus(patientID, ReportStatus.FINALIZED);
     }
+
+    // RF08
+    @GetMapping("/inProgress/by-patient/{patientID}")
+    public List<ReportDTO> getInProgressByPatient(@PathVariable Long patientID) {
+        return reportsService.getReportsByPatientAndStatus(patientID, ReportStatus.IN_PROGRESS);
+    }
+
+    @GetMapping("/created/by-patient/{patientID}")
+    public List<ReportDTO> getCreatedByPatient(@PathVariable Long patientID) {
+        return reportsService.getReportsByPatientAndStatus(patientID, ReportStatus.CREATED);
+    }
 }
