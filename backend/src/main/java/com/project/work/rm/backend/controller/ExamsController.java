@@ -3,6 +3,7 @@ package com.project.work.rm.backend.controller;
 import com.project.work.rm.backend.dto.ExamDTO;
 import com.project.work.rm.backend.service.ExamsService;
 import com.project.work.rm.backend.service.ReportsService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -22,7 +23,8 @@ public class ExamsController {
 
     // RF04 - RF05
     @DeleteMapping("/{examID}")
-    public void delete(@PathVariable Long examID) {
-        throw new RuntimeException("Error in deleting exam with id: " + examID);
+    public ResponseEntity<Void> delete(@PathVariable Long examID) {
+        examsService.delete(examID);
+        return ResponseEntity.noContent().build();
     }
 }
