@@ -35,7 +35,7 @@ public class ReportsController {
     // RF10
     @GetMapping("/{reportID}")
     public ReportDTO getByID(@PathVariable Long reportID) {
-        throw new RuntimeException("Not implemented");
+        return reportsService.getReportById(reportID);
     }
 
     // RF04

@@ -94,6 +94,11 @@ public class ReportsService {
                 .collect(Collectors.toList());
     }
 
+    public ReportDTO getReportById (Long reportID) {
+        Report report = findReportById(reportID);
+        return reportsMapper.toDTO(report);
+    }
+
     private void checkUpdatableStatus(Report report, boolean isFinalizing) {
         if (report.getStatus() != ReportStatus.IN_PROGRESS && report.getStatus() != ReportStatus.CREATED) {
             String action = isFinalizing ? "finalized" : "modified";
