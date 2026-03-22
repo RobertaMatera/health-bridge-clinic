@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.project.work.rm.backend.dto.ExamDTO;
 import com.project.work.rm.backend.dto.ReportDTO;
+import com.project.work.rm.backend.enums.ReportStatus;
 import com.project.work.rm.backend.service.ReportsService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -34,7 +35,7 @@ public class ReportsController {
     // RF10
     @GetMapping("/{reportID}")
     public ReportDTO getByID(@PathVariable Long reportID) {
-        throw new RuntimeException("Not implemented");
+        return reportsService.getReportById(reportID);
     }
 
     // RF04
@@ -86,6 +87,17 @@ public class ReportsController {
     // RF08
     @GetMapping("/finalized/by-patient/{patientID}")
     public List<ReportDTO> getFinalizedByPatient(@PathVariable Long patientID) {
-        throw new RuntimeException("Not implemented");
+        return reportsService.getReportsByPatientAndStatus(patientID, ReportStatus.FINALIZED);
+    }
+
+    // RF08
+    @GetMapping("/inProgress/by-patient/{patientID}")
+    public List<ReportDTO> getInProgressByPatient(@PathVariable Long patientID) {
+        return reportsService.getReportsByPatientAndStatus(patientID, ReportStatus.IN_PROGRESS);
+    }
+
+    @GetMapping("/created/by-patient/{patientID}")
+    public List<ReportDTO> getCreatedByPatient(@PathVariable Long patientID) {
+        return reportsService.getReportsByPatientAndStatus(patientID, ReportStatus.CREATED);
     }
 }

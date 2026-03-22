@@ -1,14 +1,11 @@
 package com.project.work.rm.backend.service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.project.work.rm.backend.dto.ExamDTO;
 import com.project.work.rm.backend.dto.ReportDTO;
-import com.project.work.rm.backend.dto.UserDTO;
 import com.project.work.rm.backend.enums.ReportStatus;
-import com.project.work.rm.backend.enums.UserRole;
 import com.project.work.rm.backend.mapper.ExamsMapper;
 import com.project.work.rm.backend.mapper.ReportsMapper;
 import com.project.work.rm.backend.model.Exam;
@@ -16,7 +13,6 @@ import com.project.work.rm.backend.model.Report;
 import com.project.work.rm.backend.model.User;
 import com.project.work.rm.backend.repository.ReportsRepository;
 import com.project.work.rm.backend.repository.UsersRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +22,6 @@ public class ReportsService {
     private final ReportsRepository reportsRepository;
     private final ReportsMapper reportsMapper;
     private final UsersRepository usersRepository;
-    private final UsersService usersService;
     private final ExamsMapper examsMapper;
 
     public List<ReportDTO> getAll() {
@@ -87,6 +82,21 @@ public class ReportsService {
     private Report findReportById(Long reportID) {
         return reportsRepository.findById(reportID)
                 .orElseThrow(() -> new RuntimeException("Report not found with id: " + reportID));
+    }
+
+    public List<ReportDTO> getReportsByPatientAndStatus(Long patientID, ReportStatus reportStatus) {
+        User patient = usersRepository.findById(patientID)
+                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + patientID));
+
+        return reportsRepository.findByPatientAndStatus(patient, reportStatus)
+                .stream()
+                .map(reportsMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public ReportDTO getReportById (Long reportID) {
+        Report report = findReportById(reportID);
+        return reportsMapper.toDTO(report);
     }
 
     private void checkUpdatableStatus(Report report, boolean isFinalizing) {
