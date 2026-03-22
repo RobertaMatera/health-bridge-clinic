@@ -4,6 +4,8 @@
       <div class="form-control full-width">
         <textarea
           rows="5"
+          [appHasRole]="UserRole.DOCTOR"
+          [action]="HasRoleAction.DISABLE"
           [formControl]="outcomeFormControl"></textarea>
       </div>
     } @else {
@@ -22,7 +24,9 @@
     }
   </div>
 
-  <div class="flex justify-end gap-2 mt-5">
+  <div
+    class="flex justify-end gap-2 mt-5"
+    [appHasRole]="UserRole.DOCTOR">
     @if (isEditing()) {
       <button
         class="button button-danger"

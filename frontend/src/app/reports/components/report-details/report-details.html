@@ -25,11 +25,13 @@
         <td class="flex gap-1 justify-end">
           <button
             class="button-small"
+            [appHasRole]="UserRole.DOCTOR"
             (click)="editingExam.set(exam)">
             <i class="fa-solid fa-pen-to-square"></i>
           </button>
           <button
             class="button-small  button-danger"
+            [appHasRole]="UserRole.DOCTOR"
             (click)="deleteExam(exam)">
             <i class="fa-solid fa-trash"></i>
           </button>
@@ -41,6 +43,7 @@
 <div class="flex justify-end mt-3">
   <button
     class="button"
+    [appHasRole]="UserRole.DOCTOR"
     [disabled]="report().status === ReportStatus.FINALIZED"
     (click)="openCreateExamDialog()">Crea
   </button>

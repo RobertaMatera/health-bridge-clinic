@@ -3,15 +3,20 @@ import {User} from '@app/users/models/user-model';
 import {Report} from '@app/reports/models/report-model';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ReportStatus} from '@app/reports/models/report-status-enum';
+import {UserRole} from '@app/users/models/user-role-enum';
+import {HasRole, HasRoleAction} from '@app/auth/directives/has-role-directive';
 
 @Component({
   selector: 'app-report-form',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HasRole
   ],
   templateUrl: './report-form.html'
 })
 export class ReportForm implements OnInit {
+  UserRole = UserRole;
+  HasRoleAction = HasRoleAction;
   ReportStatus = ReportStatus;
 
   patients = input<User[]>([]);

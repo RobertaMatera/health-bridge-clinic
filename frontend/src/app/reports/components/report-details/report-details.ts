@@ -7,12 +7,15 @@ import {ReportsService} from '@app/reports/services/reports-service';
 import {ReportForm} from '@app/reports/components/report-form/report-form';
 import {AlertsService, AlertType} from '@app/commons/services/alerts-service';
 import {ReportStatus} from '@app/reports/models/report-status-enum';
+import {UserRole} from '@app/users/models/user-role-enum';
+import {HasRole} from '@app/auth/directives/has-role-directive';
 
 @Component({
   selector: 'app-report-details',
   imports: [
     ExamDialog,
-    ReportForm
+    ReportForm,
+    HasRole
   ],
   templateUrl: './report-details.html'
 })
@@ -75,4 +78,6 @@ export class ReportDetails {
     this.editingExam.set(null);
     this.change.emit();
   }
+
+  protected readonly UserRole = UserRole;
 }
