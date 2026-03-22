@@ -16,11 +16,11 @@ export class ReportsService {
   }
 
   getByDoctor(doctorID: number): Observable<Report[]> {
-    return this.httpClient.get<Report[]>(`${environment.backendUrl}/by-doctor/${doctorID}`);
+    return this.httpClient.get<Report[]>(`${environment.backendUrl}/reports/by-doctor/${doctorID}`);
   }
 
   getFinalizedByPatient(patientID: number): Observable<Report[]> {
-    return this.httpClient.get<Report[]>(`${environment.backendUrl}/finalized/by-patient/${patientID}`);
+    return this.httpClient.get<Report[]>(`${environment.backendUrl}/reports/finalized/by-patient/${patientID}`);
   }
 
   create(report: Report): Observable<Report> {
