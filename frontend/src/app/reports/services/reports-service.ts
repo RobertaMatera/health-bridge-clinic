@@ -27,9 +27,8 @@ export class ReportsService {
     return this.httpClient.post<Report>(`${environment.backendUrl}/reports`, report);
   }
 
-  // TODO: Replace with right call
   getByID(reportID: number): Observable<Report> {
-    return this.getAll().pipe(map((reports => reports.find(r => r.id === reportID) as Report)));
+    return this.httpClient.get<Report>(`${environment.backendUrl}/reports/${reportID}`);
   }
 
   update(reportID: number, updatedReport: Report): Observable<Report> {

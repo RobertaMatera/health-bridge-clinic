@@ -91,6 +91,7 @@ public class ReportsController {
     }
 
     // RF08
+    // TODO: inProgress -> in-progress per coerenza con lo stile degli altri URL
     @GetMapping("/inProgress/by-patient/{patientID}")
     public List<ReportDTO> getInProgressByPatient(@PathVariable Long patientID) {
         return reportsService.getReportsByPatientAndStatus(patientID, ReportStatus.IN_PROGRESS);
