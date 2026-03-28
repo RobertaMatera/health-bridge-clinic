@@ -11,8 +11,8 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI().info(new Info()
-                .title("Project Work 16 REST APIs")
+                .title("Health Bridge Clinic REST APIs")
                 .version("1.0")
-                .description("Documentation of the REST APIs for the Project Work 16 by Roberta Matera"));
+                .description("Documentation of the REST APIs for the Health Bridge Clinic App by Roberta Matera"));
     }
 }
