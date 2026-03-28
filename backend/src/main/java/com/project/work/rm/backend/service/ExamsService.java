@@ -1,6 +1,7 @@
 package com.project.work.rm.backend.service;
 
 import com.project.work.rm.backend.dto.ExamDTO;
+import com.project.work.rm.backend.enums.ReportStatus;
 import com.project.work.rm.backend.mapper.ExamsMapper;
 import com.project.work.rm.backend.model.Exam;
 import com.project.work.rm.backend.repository.ExamsRepository;
@@ -15,14 +16,18 @@ public class ExamsService {
 
     public ExamDTO update(Long examID, ExamDTO examDTO) {
         Exam existingExam = findExamById(examID);
+        if (existingExam.getReport().getStatus() == ReportStatus.FINALIZED) {
+            throw new IllegalStateException("Report is already finalized.");
+        }
         examsMapper.updateEntityFromDto(examDTO, existingExam);
         Exam updatedExam = examsRepository.save(existingExam);
         return examsMapper.toDTO(updatedExam);
     }
 
     public void delete(Long examID) {
-        if (!examsRepository.existsById(examID)) {
-            throw new RuntimeException("Attempted to delete non-existent exam with  id: " + examID);
+        Exam existingExam = findExamById(examID);
+        if (existingExam.getReport().getStatus() == ReportStatus.FINALIZED) {
+            throw new IllegalStateException("Report is already finalized.");
         }
         examsRepository.deleteById(examID);
     }

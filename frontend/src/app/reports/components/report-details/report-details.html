@@ -23,30 +23,32 @@
         <td>{{ exam.unitOfMeasure }}</td>
         <td class="text-end">{{ exam.examValue }}</td>
         <td class="flex gap-1 justify-end">
-          <button
-            class="button-small"
-            [appHasRole]="UserRole.DOCTOR"
-            (click)="editingExam.set(exam)">
-            <i class="fa-solid fa-pen-to-square"></i>
-          </button>
-          <button
-            class="button-small  button-danger"
-            [appHasRole]="UserRole.DOCTOR"
-            (click)="deleteExam(exam)">
-            <i class="fa-solid fa-trash"></i>
-          </button>
+          @if (canEdit()) {
+            <button
+              class="button-small"
+              (click)="editingExam.set(exam)">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button
+              class="button-small  button-danger"
+              (click)="deleteExam(exam)">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          } @else {
+            &nbsp;
+          }
         </td>
       </tr>
     }
   </tbody>
 </table>
 <div class="flex justify-end mt-3">
-  <button
-    class="button"
-    [appHasRole]="UserRole.DOCTOR"
-    [disabled]="report().status === ReportStatus.FINALIZED"
-    (click)="openCreateExamDialog()">Crea
-  </button>
+  @if (canEdit()) {
+    <button
+      class="button"
+      (click)="openCreateExamDialog()">Crea
+    </button>
+  }
 </div>
 
 <h2>Esito</h2>

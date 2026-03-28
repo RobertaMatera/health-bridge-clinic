@@ -1,10 +1,11 @@
-import {Component, input, OnInit, output} from '@angular/core';
+import {Component, computed, effect, inject, input, OnInit, output} from '@angular/core';
 import {User} from '@app/users/models/user-model';
 import {Report} from '@app/reports/models/report-model';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {ReportStatus} from '@app/reports/models/report-status-enum';
 import {UserRole} from '@app/users/models/user-role-enum';
-import {HasRole, HasRoleAction} from '@app/auth/directives/has-role-directive';
+import {HasRole} from '@app/auth/directives/has-role-directive';
+import {AuthService} from '@app/auth/services/auth-service';
 
 @Component({
   selector: 'app-report-form',
@@ -16,13 +17,13 @@ import {HasRole, HasRoleAction} from '@app/auth/directives/has-role-directive';
 })
 export class ReportForm implements OnInit {
   UserRole = UserRole;
-  HasRoleAction = HasRoleAction;
-  ReportStatus = ReportStatus;
 
+  currentUser = inject(AuthService).user;
   patients = input<User[]>([]);
   report = input<Report>();
   submit = output<Report>();
   finalize = output<Report>();
+  canEdit = computed(() => this.report()?.status !== ReportStatus.FINALIZED && this.currentUser()?.role === UserRole.DOCTOR);
 
   patientFormControl = new FormControl<User | null>(null, Validators.required);
   outcomeFormControl = new FormControl<string | null>(null);
@@ -31,6 +32,16 @@ export class ReportForm implements OnInit {
     patient: this.patientFormControl,
     outcome: this.outcomeFormControl
   });
+
+  constructor() {
+    effect(() => {
+      if (this.report()?.status === ReportStatus.FINALIZED || this.currentUser()?.role !== UserRole.DOCTOR) {
+        this.form.disable();
+      } else {
+        this.form.enable();
+      }
+    });
+  }
 
   ngOnInit() {
     if (this.report()) {

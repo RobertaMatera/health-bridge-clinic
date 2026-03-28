@@ -1,4 +1,4 @@
-import {Component, inject, input, output, signal} from '@angular/core';
+import {Component, computed, inject, input, output, signal} from '@angular/core';
 import {Report} from '@app/reports/models/report-model';
 import {ExamDialog} from '@app/exams/components/exam-dialog/exam-dialog';
 import {Exam} from '@app/exams/models/exam-model';
@@ -8,26 +8,26 @@ import {ReportForm} from '@app/reports/components/report-form/report-form';
 import {AlertsService, AlertType} from '@app/commons/services/alerts-service';
 import {ReportStatus} from '@app/reports/models/report-status-enum';
 import {UserRole} from '@app/users/models/user-role-enum';
-import {HasRole} from '@app/auth/directives/has-role-directive';
+import {AuthService} from '@app/auth/services/auth-service';
 
 @Component({
   selector: 'app-report-details',
   imports: [
     ExamDialog,
-    ReportForm,
-    HasRole
+    ReportForm
   ],
   templateUrl: './report-details.html'
 })
 export class ReportDetails {
-  ReportStatus = ReportStatus;
 
   examsService = inject(ExamsService);
   reportsService = inject(ReportsService);
   alertsService = inject(AlertsService);
 
+  currentUser = inject(AuthService).user;
   report = input.required<Report>();
   editingExam = signal<Exam | null>(null);
+  canEdit = computed(() => this.report().status !== ReportStatus.FINALIZED && this.currentUser()?.role === UserRole.DOCTOR);
   change = output();
 
   deleteExam(exam: Exam) {
