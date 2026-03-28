@@ -1,10 +1,10 @@
 package com.project.work.rm.backend.dto;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import com.project.work.rm.backend.enums.ReportStatus;
 import lombok.Data;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 public class ReportDTO {

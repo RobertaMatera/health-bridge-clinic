@@ -28,7 +28,8 @@ public class ExamsService {
     }
 
     private Exam findExamById(Long examID) {
-        return examsRepository.findById(examID)
+        return examsRepository
+                .findById(examID)
                 .orElseThrow(() -> new RuntimeException("Exam not found!"));
     }
 }

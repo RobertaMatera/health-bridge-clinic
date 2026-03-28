@@ -25,7 +25,9 @@ public class ReportsService {
     private final ExamsMapper examsMapper;
 
     public List<ReportDTO> getAll() {
-        return reportsRepository.findAll().stream()
+        return reportsRepository
+                .findAll()
+                .stream()
                 .map(reportsMapper::toDTO)
                 .toList();
     }
@@ -36,7 +38,7 @@ public class ReportsService {
         return saveReport(existingReport);
     }
 
-    public ReportDTO update(Long reportID, ReportDTO reportDTO){
+    public ReportDTO update(Long reportID, ReportDTO reportDTO) {
         Report existingReport = findReportById(reportID);
         checkUpdatableStatus(existingReport, false);
         return updateReport(reportDTO, existingReport, false);
@@ -59,42 +61,52 @@ public class ReportsService {
 
         Exam createdExam = examsMapper.createEntityFromDto(examDTO);
         createdExam.setReport(existingReport);
-        existingReport.getExams().add(createdExam);
+        existingReport
+                .getExams()
+                .add(createdExam);
 
         return saveReport(existingReport);
     }
 
     public List<ReportDTO> getReportsByPatientId(Long patientId) {
-        User patient = usersRepository.findById(patientId)
+        User patient = usersRepository
+                .findById(patientId)
                 .orElseThrow(() -> new RuntimeException("Patient not found with id: " + patientId));
 
-        return reportsRepository.findByPatient(patient).stream()
-                .map(reportsMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    public List<ReportDTO> getReportsByStatus(ReportStatus status) {
-        return reportsRepository.findByStatus(status).stream()
-                .map(reportsMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
-    private Report findReportById(Long reportID) {
-        return reportsRepository.findById(reportID)
-                .orElseThrow(() -> new RuntimeException("Report not found with id: " + reportID));
-    }
-
-    public List<ReportDTO> getReportsByPatientAndStatus(Long patientID, ReportStatus reportStatus) {
-        User patient = usersRepository.findById(patientID)
-                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + patientID));
-
-        return reportsRepository.findByPatientAndStatus(patient, reportStatus)
+        return reportsRepository
+                .findByPatient(patient)
                 .stream()
                 .map(reportsMapper::toDTO)
                 .collect(Collectors.toList());
     }
 
-    public ReportDTO getReportById (Long reportID) {
+    public List<ReportDTO> getReportsByStatus(ReportStatus status) {
+        return reportsRepository
+                .findByStatus(status)
+                .stream()
+                .map(reportsMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    private Report findReportById(Long reportID) {
+        return reportsRepository
+                .findById(reportID)
+                .orElseThrow(() -> new RuntimeException("Report not found with id: " + reportID));
+    }
+
+    public List<ReportDTO> getReportsByPatientAndStatus(Long patientID, ReportStatus reportStatus) {
+        User patient = usersRepository
+                .findById(patientID)
+                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + patientID));
+
+        return reportsRepository
+                .findByPatientAndStatus(patient, reportStatus)
+                .stream()
+                .map(reportsMapper::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public ReportDTO getReportById(Long reportID) {
         Report report = findReportById(reportID);
         return reportsMapper.toDTO(report);
     }
@@ -107,7 +119,7 @@ public class ReportsService {
     }
 
     private ReportDTO updateReport(ReportDTO reportDTO, Report existingReport, Boolean isFinalizing) {
-        if(isFinalizing) {
+        if (isFinalizing) {
             reportsMapper.finalizeEntityFromDto(reportDTO, existingReport);
             validateReport(existingReport);
         } else {
@@ -116,13 +128,16 @@ public class ReportsService {
         return saveReport(existingReport);
     }
 
-    private ReportDTO saveReport( Report existingReport) {
+    private ReportDTO saveReport(Report existingReport) {
         Report updatedReport = reportsRepository.save(existingReport);
         return reportsMapper.toDTO(updatedReport);
     }
 
     private void validatePatient(ReportDTO reportDTO, Report existingReport) {
-        User patient = usersRepository.findByEmail(reportDTO.getPatient().getEmail())
+        User patient = usersRepository
+                .findByEmail(reportDTO
+                        .getPatient()
+                        .getEmail())
                 .orElseThrow(() -> new RuntimeException("Patient not found!"));
 
         setPatientInReport(patient, existingReport);
@@ -133,11 +148,15 @@ public class ReportsService {
     }
 
     private void validateReport(Report existingReport) {
-        if(existingReport.getExams() == null || existingReport.getExams().isEmpty()) {
+        if (existingReport.getExams() == null || existingReport
+                .getExams()
+                .isEmpty()) {
             throw new IllegalStateException("Cannot finalize report without exams.");
         }
 
-        if(existingReport.getOutcome() == null || existingReport.getOutcome().isEmpty()) {
+        if (existingReport.getOutcome() == null || existingReport
+                .getOutcome()
+                .isEmpty()) {
             throw new IllegalStateException("Cannot finalize report without an outcome.");
         }
     }

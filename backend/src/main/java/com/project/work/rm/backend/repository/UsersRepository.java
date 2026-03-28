@@ -10,9 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UsersRepository extends JpaRepository<User, Long> {
-
     Optional<User> findByEmail(String email);
     List<User> findByRole(UserRole role);
-
     long countByRole(UserRole role);
 }
