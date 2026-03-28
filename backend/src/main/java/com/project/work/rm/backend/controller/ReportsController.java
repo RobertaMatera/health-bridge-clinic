@@ -6,6 +6,7 @@ import com.project.work.rm.backend.dto.ExamDTO;
 import com.project.work.rm.backend.dto.ReportDTO;
 import com.project.work.rm.backend.enums.ReportStatus;
 import com.project.work.rm.backend.service.ReportsService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/reports")

@@ -1,10 +1,9 @@
 package com.project.work.rm.backend.mapper;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-
 import com.project.work.rm.backend.dto.UserDTO;
 import com.project.work.rm.backend.model.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UsersMapper {
