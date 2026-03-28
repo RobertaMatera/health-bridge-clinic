@@ -14,7 +14,9 @@ public interface ReportsMapper {
     Report toEntity(ReportDTO reportDTO);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "patient", ignore = true)
     @Mapping(target = "exams", ignore = true)
     void baseUpdate(ReportDTO dto, @MappingTarget Report report);
