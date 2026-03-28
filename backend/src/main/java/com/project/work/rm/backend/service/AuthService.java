@@ -1,26 +1,25 @@
 package com.project.work.rm.backend.service;
 
-import java.util.Optional;
-
 import com.project.work.rm.backend.model.User;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
+import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService implements AuditorAware<User> {
 
-    public Optional<User> getCurrentUser() {
-        val authentication = SecurityContextHolder
-                .getContext()
-                .getAuthentication();
-
-        if (authentication == null || authentication.getPrincipal() == null) {
-            return Optional.empty();
-        }
-
-        return Optional.of((User) authentication.getPrincipal());
+    @Override
+    public Optional<User> getCurrentAuditor() {
+        return Optional.of(SecurityContextHolder.getContext())
+                .map(SecurityContext::getAuthentication)
+                .filter(Authentication::isAuthenticated)
+                .map(Authentication::getPrincipal)
+                .map(User.class::cast);
     }
 }

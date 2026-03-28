@@ -12,7 +12,9 @@
 
       @if (report.createdBy) {
         <dt>Da</dt>
-        <dd>{{ report.createdBy }}</dd>
+        <dd>
+          <app-user-badge [user]="report.createdBy"></app-user-badge>
+        </dd>
       }
 
       @if (report.updatedAt) {

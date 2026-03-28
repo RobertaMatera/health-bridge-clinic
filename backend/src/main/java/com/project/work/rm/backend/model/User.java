@@ -1,6 +1,5 @@
 package com.project.work.rm.backend.model;
 
-import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -63,12 +62,6 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
-
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column()
-    private LocalDateTime updatedAt;
 
     @Override
     @NullMarked

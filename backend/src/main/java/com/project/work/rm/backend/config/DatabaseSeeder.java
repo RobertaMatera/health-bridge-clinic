@@ -1,7 +1,5 @@
 package com.project.work.rm.backend.config;
 
-import java.time.LocalDateTime;
-
 import com.project.work.rm.backend.enums.UserRole;
 import com.project.work.rm.backend.model.User;
 import com.project.work.rm.backend.repository.UsersRepository;
@@ -29,7 +27,6 @@ public class DatabaseSeeder {
                 .email("g.massari@gmail.com")
                 .password(passwordEncoder.encode("patient1"))
                 .role(UserRole.PATIENT)
-                .createdAt(LocalDateTime.now())
                 .build());
 
         usersRepository.save(User
@@ -39,7 +36,6 @@ public class DatabaseSeeder {
                 .email("spagnoli.luisa@libero.it")
                 .password(passwordEncoder.encode("patient2"))
                 .role(UserRole.PATIENT)
-                .createdAt(LocalDateTime.now())
                 .build());
 
         usersRepository.save(User
@@ -49,7 +45,6 @@ public class DatabaseSeeder {
                 .email("claudiarossi@gmail.com")
                 .password(passwordEncoder.encode("doctor1"))
                 .role(UserRole.DOCTOR)
-                .createdAt(LocalDateTime.now())
                 .build());
 
         usersRepository.save(User
@@ -59,7 +54,6 @@ public class DatabaseSeeder {
                 .email("g.poi@gmail.com")
                 .password(passwordEncoder.encode("doctor2"))
                 .role(UserRole.DOCTOR)
-                .createdAt(LocalDateTime.now())
                 .build());
     }
 }
