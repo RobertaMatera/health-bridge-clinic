@@ -1,5 +1,12 @@
 <h1>Referti</h1>
 
+<div class="filter-bar">
+  <div class="filter-option" [class.bg-gray-100]="requestType() === 'ALL'" (click)="setRequestType('ALL')">Tutti</div>
+  <div class="filter-option" [class.bg-gray-100]="requestType() === ReportStatus.CREATED" (click)="setRequestType(ReportStatus.CREATED)">Creati</div>
+  <div class="filter-option" [class.bg-gray-100]="requestType() === ReportStatus.IN_PROGRESS" (click)="setRequestType(ReportStatus.IN_PROGRESS)">In corso</div>
+  <div class="filter-option" [class.bg-gray-100]="requestType() === ReportStatus.FINALIZED" (click)="setRequestType(ReportStatus.FINALIZED)">Finalizzati</div>
+</div>
+
 <table>
   <thead>
   <tr>

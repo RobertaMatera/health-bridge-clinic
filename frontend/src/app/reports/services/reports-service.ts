@@ -4,6 +4,7 @@ import {Report} from '@app/reports/models/report-model';
 import {Exam} from '@app/exams/models/exam-model';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@environments/environment';
+import {ReportStatus} from '@app/reports/models/report-status-enum';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +14,6 @@ export class ReportsService {
 
   getAll(): Observable<Report[]> {
     return this.httpClient.get<Report[]>(`${environment.backendUrl}/reports`);
-  }
-
-  getByDoctor(doctorID: number): Observable<Report[]> {
-    return this.httpClient.get<Report[]>(`${environment.backendUrl}/reports/by-doctor/${doctorID}`);
-  }
-
-  getFinalizedByPatient(patientID: number): Observable<Report[]> {
-    return this.httpClient.get<Report[]>(`${environment.backendUrl}/reports/finalized/by-patient/${patientID}`);
   }
 
   create(report: Report): Observable<Report> {
@@ -41,5 +34,9 @@ export class ReportsService {
 
   createExam(reportID: number, exam: Exam): Observable<Exam> {
     return this.httpClient.post<Exam>(`${environment.backendUrl}/reports/${reportID}/exams`, exam);
+  }
+
+  getByStatus(status: ReportStatus): Observable<Report[]> {
+    return this.httpClient.get<Report[]>(`${environment.backendUrl}/reports/by-status/${status}`);
   }
 }

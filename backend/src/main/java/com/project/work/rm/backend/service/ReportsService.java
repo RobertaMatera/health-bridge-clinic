@@ -23,13 +23,26 @@ public class ReportsService {
     private final ReportsMapper reportsMapper;
     private final UsersRepository usersRepository;
     private final ExamsMapper examsMapper;
+    private final AuthService authService;
 
     public List<ReportDTO> getAll() {
-        return reportsRepository
-                .findAll()
-                .stream()
-                .map(reportsMapper::toDTO)
-                .toList();
+        if (authService.isDoctor()) {
+            return reportsRepository
+                    .findAllByCreatedBy(authService
+                            .getCurrentAuditor()
+                            .get())
+                    .stream()
+                    .map(reportsMapper::toDTO)
+                    .toList();
+        } else {
+            return reportsRepository
+                    .findAllByPatient(authService
+                            .getCurrentAuditor()
+                            .get())
+                    .stream()
+                    .map(reportsMapper::toDTO)
+                    .toList();
+        }
     }
 
     public ReportDTO create(ReportDTO reportDTO) {
@@ -68,42 +81,33 @@ public class ReportsService {
         return saveReport(existingReport);
     }
 
-    public List<ReportDTO> getReportsByPatientId(Long patientId) {
-        User patient = usersRepository
-                .findById(patientId)
-                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + patientId));
-
-        return reportsRepository
-                .findByPatient(patient)
-                .stream()
-                .map(reportsMapper::toDTO)
-                .collect(Collectors.toList());
-    }
-
     public List<ReportDTO> getReportsByStatus(ReportStatus status) {
-        return reportsRepository
-                .findByStatus(status)
-                .stream()
-                .map(reportsMapper::toDTO)
-                .collect(Collectors.toList());
+        if (authService.isDoctor()) {
+            return reportsRepository
+                    .findAllByCreatedByAndStatus(
+                            authService
+                                    .getCurrentAuditor()
+                                    .get(), status)
+                    .stream()
+                    .map(reportsMapper::toDTO)
+                    .collect(Collectors.toList());
+        } else {
+            return reportsRepository
+                    .findAllByPatientAndStatus(
+                            authService
+                                    .getCurrentAuditor()
+                                    .get(), status
+                    )
+                    .stream()
+                    .map(reportsMapper::toDTO)
+                    .collect(Collectors.toList());
+        }
     }
 
     private Report findReportById(Long reportID) {
         return reportsRepository
                 .findById(reportID)
                 .orElseThrow(() -> new RuntimeException("Report not found with id: " + reportID));
-    }
-
-    public List<ReportDTO> getReportsByPatientAndStatus(Long patientID, ReportStatus reportStatus) {
-        User patient = usersRepository
-                .findById(patientID)
-                .orElseThrow(() -> new RuntimeException("Patient not found with id: " + patientID));
-
-        return reportsRepository
-                .findByPatientAndStatus(patient, reportStatus)
-                .stream()
-                .map(reportsMapper::toDTO)
-                .collect(Collectors.toList());
     }
 
     public ReportDTO getReportById(Long reportID) {

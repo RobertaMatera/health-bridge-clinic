@@ -166,6 +166,14 @@ dd:last-child {
   @apply fixed left-0 right-0 bottom-0 p-5 flex items-center justify-center z-100;
 }
 
+.filter-bar {
+  @apply flex gap-5 bg-white rounded-xl shadow mb-5 px-3 py-2;
+}
+
+.filter-option {
+  @apply p-2 px-3 hover:bg-gray-100 rounded-xl cursor-pointer;
+}
+
 /**
  * Forms
  */
