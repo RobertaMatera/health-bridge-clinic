@@ -1,31 +1,23 @@
 package com.project.work.rm.backend.controller;
 
-import java.util.List;
-
 import com.project.work.rm.backend.dto.ExamDTO;
 import com.project.work.rm.backend.dto.ReportDTO;
 import com.project.work.rm.backend.enums.ReportStatus;
 import com.project.work.rm.backend.service.ReportsService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/reports")
+@RequiredArgsConstructor
 public class ReportsController {
     private final ReportsService reportsService;
-
-    public ReportsController(ReportsService reportsService) {
-        this.reportsService = reportsService;
-    }
 
     @GetMapping
     public List<ReportDTO> getAll() {
@@ -36,12 +28,6 @@ public class ReportsController {
     @GetMapping("/{reportID}")
     public ReportDTO getByID(@PathVariable Long reportID) {
         return reportsService.getReportById(reportID);
-    }
-
-    // RF04
-    @GetMapping("/{reportID}/exams")
-    public List<ExamDTO> getExamsByID(@PathVariable Long reportID) {
-        throw new RuntimeException("Not implemented");
     }
 
     // RF04+RF05 exam creation
@@ -91,8 +77,7 @@ public class ReportsController {
     }
 
     // RF08
-    // TODO: inProgress -> in-progress per coerenza con lo stile degli altri URL
-    @GetMapping("/inProgress/by-patient/{patientID}")
+    @GetMapping("/in-progress/by-patient/{patientID}")
     public List<ReportDTO> getInProgressByPatient(@PathVariable Long patientID) {
         return reportsService.getReportsByPatientAndStatus(patientID, ReportStatus.IN_PROGRESS);
     }

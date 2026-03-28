@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/analytics")
 @RequiredArgsConstructor
 public class AnalyticsController {
-
     private final AnalyticsService analyticsService;
 
     // RF12
