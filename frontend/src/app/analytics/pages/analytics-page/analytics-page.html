@@ -1,8 +1,26 @@
 <h1>Statistiche</h1>
-<div class="island">
-  @if (analytics(); as analytics) {
-    <div><strong>{{ analytics.createdReports }}</strong> referti creati</div>
-    <div><strong>{{ analytics.inProgressReports }}</strong> referti in corso</div>
-    <div><strong>{{ analytics.finalizedReports }}</strong> referti finalizzati</div>
-  }
+
+<div class="grid grid-cols-2 gap-5">
+  <div class="col-span-1">
+    <div class="island">
+      <h2>Utenti</h2>
+      @if (analytics(); as analytics) {
+        <div><strong>{{ analytics.totalUsers }}</strong> utenti totali</div>
+        <div><strong>{{ analytics.totalDoctors }}</strong> dottori</div>
+        <div><strong>{{ analytics.totalPatients }}</strong> pazienti</div>
+      }
+    </div>
+  </div>
+
+  <div class="col-span-1">
+    <div class="island">
+      <h2>Referti</h2>
+      @if (analytics(); as analytics) {
+        <div><strong>{{ analytics.totalReports }}</strong> referti totali</div>
+        <div><strong>{{ analytics.createdReports }}</strong> referti in stato "Creato"</div>
+        <div><strong>{{ analytics.inProgressReports }}</strong> referti in stato "In corso"</div>
+        <div><strong>{{ analytics.finalizedReports }}</strong> referti in stato "Finalizzato"</div>
+      }
+    </div>
+  </div>
 </div>

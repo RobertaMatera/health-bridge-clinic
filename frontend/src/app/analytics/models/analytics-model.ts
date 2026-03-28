@@ -2,5 +2,9 @@ export interface Analytics {
   createdReports: number;
   inProgressReports: number;
   finalizedReports: number;
-  averageMinutesInProgress: number;
+  totalReports: number;
+
+  totalUsers: number;
+  totalPatients: number;
+  totalDoctors: number;
 }

@@ -1,18 +1,16 @@
-import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
+import {inject, Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 import {Analytics} from '@app/analytics/models/analytics-model';
+import {HttpClient} from '@angular/common/http';
+import {environment} from '@environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AnalyticsService {
+  httpClient = inject(HttpClient);
 
   getAll(): Observable<Analytics> {
-    return of({
-      createdReports: 123,
-      inProgressReports: 23,
-      finalizedReports: 89,
-      averageMinutesInProgress: 463
-    });
+    return this.httpClient.get<Analytics>(`${environment.backendUrl}/analytics`);
   }
 }
