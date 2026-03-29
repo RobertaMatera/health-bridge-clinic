@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AnalyticsController {
     private final AnalyticsService analyticsService;
 
-    // RF12
+    // RF10
     @GetMapping
     public AnalyticsDTO getAll() {
         return analyticsService.getAll();

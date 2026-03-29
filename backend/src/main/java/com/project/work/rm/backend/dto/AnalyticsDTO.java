@@ -6,17 +6,15 @@ import lombok.Data;
 @Data
 @Builder
 public class AnalyticsDTO {
-    // RF13
+
     private Long createdReports;
     private Long inProgressReports;
     private Long finalizedReports;
     private Long totalReports;
 
-    // RFXX TODO: Add to requirements
     private Long totalUsers;
     private Long totalPatients;
     private Long totalDoctors;
 
-    // RF14 TODO: Remove from requirements
     private Long averageMinutesInProgress;
 }

@@ -27,37 +27,37 @@ public class ReportsController {
         return reportsService.getAll();
     }
 
-    // RF10
+    // RF 09
     @GetMapping("/{reportID}")
     public ReportDTO getByID(@PathVariable Long reportID) {
         return reportsService.getReportById(reportID);
     }
 
-    // RF04+RF05 exam creation
+    // RF03+RF04 exam creation
     @PostMapping("/{reportID}/exams")
     public ReportDTO createExam(@PathVariable Long reportID, @Valid @RequestBody ExamDTO examDTO) {
         return reportsService.createExam(reportID, examDTO);
     }
 
-    // RF03 report creation
+    // RF02 report creation
     @PostMapping
     public ReportDTO create(@Valid @RequestBody ReportDTO reportDTO) {
         return reportsService.create(reportDTO);
     }
 
-    // RF04 report update
+    // RF03 report update
     @PutMapping("/{reportID}")
     public ReportDTO update(@PathVariable Long reportID, @Valid @RequestBody ReportDTO reportDTO) {
         return reportsService.update(reportID, reportDTO);
     }
 
-    // RF06 report finalization
+    // RF05 report finalization
     @PutMapping("/{reportID}/finalize")
     public ReportDTO finalize(@PathVariable Long reportID, @RequestBody ReportDTO reportDTO) {
         return reportsService.finalize(reportID, reportDTO);
     }
 
-    // RF08
+    // RF07
     @GetMapping("/by-status/{status}")
     public List<ReportDTO> getFinalizedByStatus(@PathVariable ReportStatus status) {
         return reportsService.getReportsByStatus(status);

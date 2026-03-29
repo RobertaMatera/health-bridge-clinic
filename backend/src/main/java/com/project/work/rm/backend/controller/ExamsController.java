@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 public class ExamsController {
     private final ExamsService examsService;
 
-    // RF04 - RF05
+    // RF03 - RF04
     @PutMapping("/{examID}")
     public ExamDTO update(@PathVariable Long examID, @RequestBody ExamDTO examDTO) {
         return examsService.update(examID, examDTO);
     }
 
-    // RF04 - RF05
+    // RF03 - RF04
     @DeleteMapping("/{examID}")
     public ResponseEntity<Void> delete(@PathVariable Long examID) {
         examsService.delete(examID);
