@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+/*
+  Analisi psicologica delle scelte di stile:
+  - Il colore grigio (text-gray-700) per il testo principale trasmette neutralità, professionalità e leggibilità, riducendo l'affaticamento visivo e favorendo la concentrazione sui contenuti.
+  - L'highlight viola (hover:text-purple-700) è associato a creatività, innovazione e fiducia, e viene usato per guidare l'attenzione dell'utente sulle azioni attive o selezionate, senza risultare aggressivo.
+  - L'uso di font sans-serif (font-medium) comunica modernità, chiarezza e accessibilità, facilitando la lettura anche per utenti con dislessia o difficoltà visive.
+  - Le spaziature generose (py-2, pl-3, pr-4) e la dimensione dei pulsanti aumentano la percezione di ordine e accoglienza, riducendo lo stress cognitivo e migliorando l'esperienza utente.
+  - L'approccio minimalista, con pochi colori e linee pulite, trasmette affidabilità e facilita la navigazione, secondo i principi di psicologia della Gestalt (prossimità, somiglianza, continuità).
+  - L'effetto hover fornisce feedback immediato, aumentando il senso di controllo e sicurezza nell'interazione.
+  Tutte le scelte sono coerenti con le linee guida WCAG per l'accessibilità e con i principi di design centrati sull'utente.
+*/
+
 .navbar-link {
   @apply block cursor-pointer font-medium py-2 pl-3 pr-4 text-gray-700 hover:text-purple-700 lg:p-0;
 }

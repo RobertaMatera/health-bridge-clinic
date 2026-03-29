@@ -1,3 +1,19 @@
+<!--
+  Navbar visibile solo se l'utente è autenticato, per chiarezza e sicurezza.
+  Layout flessibile e responsive (flex, griglie) per adattarsi a diversi dispositivi (principio di responsività, WCAG 1.4.10).
+  I pulsanti e le icone sono grandi e facilmente cliccabili (affordance, WCAG 2.5.5).
+  L'uso di ruoli (appHasRole) garantisce che solo gli utenti autorizzati vedano certe voci di menu (principio di sicurezza e chiarezza).
+  Il feedback visivo (hover, icone che cambiano) aiuta l'utente a capire lo stato della navigazione.
+
+  Colori:
+    - Il colore principale del testo (text-gray-700) garantisce un buon contrasto su sfondo chiaro, migliorando la leggibilità (WCAG 1.4.3 AA).
+    - L'highlight viola (text-purple-700) per la voce attiva aiuta l'utente a identificare la pagina corrente, seguendo il principio di feedback visivo e coerenza cromatica.
+    - I bordi e le ombre (border-gray-200, shadow) separano visivamente la navbar dal resto della pagina, migliorando la gerarchia visiva.
+
+  Font:
+    - Il font scelto (font-medium) è sans-serif, moderno e leggibile, adatto a interfacce digitali e conforme alle best practice di leggibilità.
+    - L'uso di dimensioni e pesi diversi aiuta a distinguere tra elementi primari e secondari, rafforzando la gerarchia visiva.
+-->
 @if (loggedIn()) {
     <nav class="island py-5! mt-5 mx-6 z-10 relative">
       <div class="flex flex-wrap items-center justify-between max-w-7xl">
@@ -8,6 +24,10 @@
             <span></span>
           </div>
 
+          <!--
+            Pulsante menu mobile: visibile solo su schermi piccoli, garantisce accessibilità e usabilità su mobile (WCAG 2.4.7).
+            L'icona cambia in base allo stato per fornire feedback immediato.
+          -->
           <button
             (click)="toggleMenu()"
             type="button"
@@ -45,6 +65,12 @@
       </div>
     </nav>
 
+    <!--
+      Barra utente: mostra badge e ruolo per chiarezza e feedback.
+      Il pulsante logout è ben visibile e facilmente accessibile (affordance, WCAG 2.4.4).
+
+      Colori e font coerenti con il resto della navbar per mantenere uniformità visiva e rafforzare la brand identity.
+    -->
     <div class="flex justify-between items-center border border-gray-200 rounded-xl pt-8 -mt-5 z-0 pb-3 px-5 mb-10 mx-6 shadow">
       <div class="flex gap-5 items-center">
         <app-user-badge [user]="user()!"></app-user-badge>
