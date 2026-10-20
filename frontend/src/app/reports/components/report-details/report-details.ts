@@ -5,7 +5,7 @@ import {Exam} from '@app/exams/models/exam-model';
 import {ExamsService} from '@app/exams/services/exams-service';
 import {ReportsService} from '@app/reports/services/reports-service';
 import {ReportForm} from '@app/reports/components/report-form/report-form';
-import {AlertsService, AlertType} from '@app/commons/services/alerts-service';
+import {ToastService} from '@app/commons/ui/toast/toast-service';
 import {ReportStatus} from '@app/reports/models/report-status-enum';
 import {UserRole} from '@app/users/models/user-role-enum';
 import {AuthService} from '@app/auth/services/auth-service';
@@ -22,7 +22,7 @@ export class ReportDetails {
 
   examsService = inject(ExamsService);
   reportsService = inject(ReportsService);
-  alertsService = inject(AlertsService);
+  toastService = inject(ToastService);
 
   currentUser = inject(AuthService).user;
   report = input.required<Report>();
@@ -38,7 +38,7 @@ export class ReportDetails {
     this.examsService.delete(exam.id)
       .subscribe({
         next: () => this.change.emit(),
-        error: error => this.alertsService.showAlert(error.message, AlertType.ERROR)
+        error: error => this.toastService.httpError(error)
       });
   }
 
@@ -58,7 +58,7 @@ export class ReportDetails {
     this.reportsService.update(updatedReport.id, updatedReport)
       .subscribe({
         next: () => this.change.emit(),
-        error: error => this.alertsService.showAlert(error.message, AlertType.ERROR)
+        error: error => this.toastService.httpError(error)
       });
   }
 
@@ -70,7 +70,7 @@ export class ReportDetails {
     this.reportsService.finalize(updatedReport.id, updatedReport)
       .subscribe({
         next: () => this.change.emit(),
-        error: error => this.alertsService.showAlert(error.message, AlertType.ERROR)
+        error: error => this.toastService.httpError(error)
       });
   }
 

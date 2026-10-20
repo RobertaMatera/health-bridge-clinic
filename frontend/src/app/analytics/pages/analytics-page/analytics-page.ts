@@ -1,7 +1,7 @@
 import {Component, inject, OnInit, signal} from '@angular/core';
 import {AnalyticsService} from '@app/analytics/services/analytics-service';
 import {Analytics} from '@app/analytics/models/analytics-model';
-import {AlertsService, AlertType} from '@app/commons/services/alerts-service';
+import {ToastService} from '@app/commons/ui/toast/toast-service';
 
 @Component({
   selector: 'app-analytics-page',
@@ -9,7 +9,7 @@ import {AlertsService, AlertType} from '@app/commons/services/alerts-service';
 })
 export class AnalyticsPage implements OnInit {
   analyticsService = inject(AnalyticsService);
-  alertsService = inject(AlertsService);
+  toastService = inject(ToastService);
 
   analytics = signal<Analytics | null>(null);
 
@@ -17,7 +17,7 @@ export class AnalyticsPage implements OnInit {
     this.analyticsService.getAll()
       .subscribe({
         next: analytics => this.analytics.set(analytics),
-        error: error => this.alertsService.showAlert(error.message, AlertType.ERROR)
+        error: error => this.toastService.httpError(error)
       });
   }
 }
