@@ -72,7 +72,8 @@ public class GlobalExceptionHandler {
         // Framework exceptions (unknown route, wrong method, ...) already know their status.
         if (ex instanceof ErrorResponse errorResponse && errorResponse.getStatusCode().is4xxClientError()) {
             HttpStatus status = HttpStatus.valueOf(errorResponse.getStatusCode().value());
-            return build(status, ErrorCode.MALFORMED_REQUEST, status.getReasonPhrase(), request, null);
+            ErrorCode code = status == HttpStatus.NOT_FOUND ? ErrorCode.NOT_FOUND : ErrorCode.MALFORMED_REQUEST;
+            return build(status, code, status.getReasonPhrase(), request, null);
         }
         log.error("Unexpected error on {} {}", request.getMethod(), request.getRequestURI(), ex);
         return build(HttpStatus.INTERNAL_SERVER_ERROR, ErrorCode.INTERNAL_ERROR, "Unexpected error", request, null);

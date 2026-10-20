@@ -121,7 +121,20 @@ public class ReportsService {
     @Transactional(readOnly = true)
     public ReportDTO getReportById(Long reportID) {
         Report report = findReportById(reportID);
+        checkReadAccess(report);
         return reportsMapper.toDTO(report);
+    }
+
+    // Patients may only read their own reports. Answer 404 rather than 403 so ids of other
+    // patients' reports cannot be probed.
+    private void checkReadAccess(Report report) {
+        if (authService.isDoctor()) {
+            return;
+        }
+        Long currentUserId = authService.getCurrentAuditor().map(User::getId).orElse(null);
+        if (report.getPatient() == null || !report.getPatient().getId().equals(currentUserId)) {
+            throw new ResourceNotFoundException(ErrorCode.REPORT_NOT_FOUND, "Report not found with id: " + report.getId());
+        }
     }
 
     private void checkUpdatableStatus(Report report, boolean isFinalizing) {

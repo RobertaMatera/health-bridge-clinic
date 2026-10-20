@@ -7,6 +7,7 @@ package com.project.work.rm.backend.exception;
 public enum ErrorCode {
     VALIDATION_FAILED,
     MALFORMED_REQUEST,
+    NOT_FOUND,
     INVALID_CREDENTIALS,
     UNAUTHENTICATED,
     ACCESS_DENIED,
