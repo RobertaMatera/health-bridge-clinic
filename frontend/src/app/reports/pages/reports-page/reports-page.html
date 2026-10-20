@@ -1,62 +1,14 @@
 @if (authService.isDoctor()) {
   <app-doctor-reports/>
 } @else {
-<h1>Referti</h1>
-
-<div class="filter-bar">
-  <div class="filter-option" [class.bg-gray-100]="requestType() === 'ALL'" (click)="setRequestType('ALL')">Tutti</div>
-  <div class="filter-option" [class.bg-gray-100]="requestType() === ReportStatus.CREATED" (click)="setRequestType(ReportStatus.CREATED)">Creati</div>
-  <div class="filter-option" [class.bg-gray-100]="requestType() === ReportStatus.IN_PROGRESS" (click)="setRequestType(ReportStatus.IN_PROGRESS)">In corso</div>
-  <div class="filter-option" [class.bg-gray-100]="requestType() === ReportStatus.FINALIZED" (click)="setRequestType(ReportStatus.FINALIZED)">Finalizzati</div>
-</div>
-
-<table>
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Paziente</th>
-    <th>Stato</th>
-    <th>Analisi</th>
-  </tr>
-  </thead>
-  <tbody>
-    @if (!loading() && reports().length === 0) {
-      <tr>
-        <td
-          colspan="4"
-          class="text-gray-500 py-5">Nessun referto presente
-        </td>
-      </tr>
-    }
-
+  <ul class="flex flex-col gap-3">
     @for (report of reports(); track report.id) {
-      <tr
-        [routerLink]="['/reports', report.id]"
-        class="cursor-pointer">
-        <td>{{ report.id }}</td>
-        <td>
-          <app-user-badge [user]="report.patient"></app-user-badge>
-        </td>
-        <td>
+      <li>
+        <a class="card flex items-center justify-between p-4" [routerLink]="['/reports', report.id]">
+          #{{ report.id }}
           <app-report-status-badge [status]="report.status" audience="patient"/>
-        </td>
-        <td>
-          {{ report.exams?.length ?? 0 }}
-        </td>
-      </tr>
+        </a>
+      </li>
     }
-  </tbody>
-</table>
-
-<div class="flex justify-end mt-5" [appHasRole]="UserRole.DOCTOR">
-  <a
-    class="button"
-    (click)="showCreateDialog.set(true)">Crea</a>
-</div>
-
-@if (showCreateDialog()) {
-  <app-report-dialog
-    (dismiss)="showCreateDialog.set(false)"
-    (confirm)="onReportDialogConfirm($event)"></app-report-dialog>
-}
+  </ul>
 }

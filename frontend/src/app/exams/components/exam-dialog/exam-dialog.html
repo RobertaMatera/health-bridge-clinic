@@ -1,26 +1,106 @@
-<div class="dialog-backdrop">
-  <div class="dialog-content">
-    @if (exam(); as exam) {
-      <div class="flex items-center justify-between mb-3">
-        <h2>
-          @if (exam.id) {
-            Modifica esame
-          } @else {
-            Nuovo esame
-          }
-        </h2>
-        <i
-          class="fa-solid fa-lg fa-xmark cursor-pointer p-5"
-          (click)="dismiss.emit()"></i>
+<app-dialog [heading]="heading()" (dismiss)="dismiss.emit()">
+  <form novalidate class="flex flex-col gap-5" [formGroup]="form" (ngSubmit)="submit()">
+    @if (serverError(); as error) {
+      <div class="alert-error" role="alert">
+        <i class="fa-solid fa-circle-exclamation mt-0.5" aria-hidden="true"></i>
+        <span>{{ error | t }}</span>
       </div>
-
-      @if (error(); as errorMessage) {
-        <div class="error-message mb-3">
-          {{ errorMessage }}
-        </div>
-      }
-
-      <app-exam-form [exam]="exam" (submit)="onFormSubmit($event)"></app-exam-form>
     }
-  </div>
-</div>
+
+    <div>
+      <label class="label" for="exam-analysis">{{ 'reports.examForm.analysis' | t }}</label>
+      <input
+        id="exam-analysis"
+        class="input"
+        autofocus
+        autocomplete="off"
+        formControlName="analysis"
+        [attr.aria-invalid]="fieldError('analysis') ? true : null"
+        [attr.aria-describedby]="fieldError('analysis') ? 'exam-analysis-error' : null">
+      @if (fieldError('analysis'); as error) {
+        <p id="exam-analysis-error" class="field-error">
+          <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ error | t: {max: maxLength('analysis')} }}
+        </p>
+      }
+    </div>
+
+    <div class="grid gap-5 sm:grid-cols-2">
+      <div>
+        <label class="label" for="exam-value">{{ 'reports.examForm.value' | t }}</label>
+        <input
+          id="exam-value"
+          class="input font-mono"
+          type="number"
+          inputmode="decimal"
+          step="any"
+          formControlName="examValue"
+          [attr.aria-invalid]="fieldError('examValue') ? true : null"
+          [attr.aria-describedby]="fieldError('examValue') ? 'exam-value-error' : null">
+        @if (fieldError('examValue'); as error) {
+          <p id="exam-value-error" class="field-error">
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ error | t }}
+          </p>
+        }
+      </div>
+      <div>
+        <label class="label" for="exam-unit">{{ 'reports.examForm.unit' | t }}</label>
+        <input
+          id="exam-unit"
+          class="input"
+          autocomplete="off"
+          formControlName="unitOfMeasure"
+          [attr.aria-invalid]="fieldError('unitOfMeasure') ? true : null"
+          [attr.aria-describedby]="fieldError('unitOfMeasure') ? 'exam-unit-error' : null">
+        @if (fieldError('unitOfMeasure'); as error) {
+          <p id="exam-unit-error" class="field-error">
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ error | t: {max: maxLength('unitOfMeasure')} }}
+          </p>
+        }
+      </div>
+    </div>
+
+    <fieldset aria-describedby="exam-range-hint">
+      <legend class="label">
+        {{ 'reports.examForm.reference' | t }}
+        <span class="font-normal text-muted">({{ 'common.optional' | t }})</span>
+      </legend>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="mb-1.5 block text-[13px] text-muted" for="exam-ref-min">{{ 'reports.examForm.refMin' | t }}</label>
+          <input
+            id="exam-ref-min"
+            class="input font-mono"
+            type="number"
+            inputmode="decimal"
+            step="any"
+            formControlName="refMin"
+            [attr.aria-invalid]="rangeError() ? true : null"
+            [attr.aria-describedby]="rangeError() ? 'exam-range-error' : null">
+        </div>
+        <div>
+          <label class="mb-1.5 block text-[13px] text-muted" for="exam-ref-max">{{ 'reports.examForm.refMax' | t }}</label>
+          <input
+            id="exam-ref-max"
+            class="input font-mono"
+            type="number"
+            inputmode="decimal"
+            step="any"
+            formControlName="refMax"
+            [attr.aria-invalid]="rangeError() ? true : null"
+            [attr.aria-describedby]="rangeError() ? 'exam-range-error' : null">
+        </div>
+      </div>
+      @if (rangeError()) {
+        <p id="exam-range-error" class="field-error">
+          <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>{{ 'validation.rangeOrder' | t }}
+        </p>
+      }
+      <p id="exam-range-hint" class="field-hint">{{ 'reports.examForm.refHint' | t }}</p>
+    </fieldset>
+
+    <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+      <button type="button" class="btn btn-secondary btn-lg" (click)="dismiss.emit()">{{ 'common.cancel' | t }}</button>
+      <button type="submit" class="btn btn-primary btn-lg" [disabled]="saving()">{{ 'common.save' | t }}</button>
+    </div>
+  </form>
+</app-dialog>
