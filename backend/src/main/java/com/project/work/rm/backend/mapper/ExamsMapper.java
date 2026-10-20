@@ -11,7 +11,14 @@ public interface ExamsMapper {
     ExamDTO toDTO(Exam entity);
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "report", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Exam createEntityFromDto(ExamDTO dto);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "report", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     void updateEntityFromDto(ExamDTO dto, @MappingTarget Exam exam);
 }

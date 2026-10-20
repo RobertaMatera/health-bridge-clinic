@@ -36,6 +36,11 @@ public class Exam {
     @NotNull(message = "Exam Value is required")
     private Float examValue;
 
+    // Optional bounds of the reference interval; either one may be missing (e.g. "< 200").
+    private Float refMin;
+
+    private Float refMax;
+
     @ManyToOne
     @JoinColumn(name = "report_id")
     private Report report;

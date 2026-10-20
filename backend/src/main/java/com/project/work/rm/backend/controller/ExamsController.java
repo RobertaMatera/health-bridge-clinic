@@ -2,6 +2,7 @@ package com.project.work.rm.backend.controller;
 
 import com.project.work.rm.backend.dto.ExamDTO;
 import com.project.work.rm.backend.service.ExamsService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ public class ExamsController {
 
     // RF03 - RF04
     @PutMapping("/{examID}")
-    public ExamDTO update(@PathVariable Long examID, @RequestBody ExamDTO examDTO) {
+    public ExamDTO update(@PathVariable Long examID, @Valid @RequestBody ExamDTO examDTO) {
         return examsService.update(examID, examDTO);
     }
 
