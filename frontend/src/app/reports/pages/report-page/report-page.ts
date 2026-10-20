@@ -5,7 +5,7 @@ import {ActivatedRoute, RouterLink} from '@angular/router';
 import {Report} from '@app/reports/models/report-model';
 import {ReportsService} from '@app/reports/services/reports-service';
 import {ReportEditor} from '@app/reports/components/report-editor/report-editor';
-import {ExamsTable} from '@app/exams/components/exams-table/exams-table';
+import {PatientReport} from '@app/patient/components/patient-report/patient-report';
 import {AuthService} from '@app/auth/services/auth-service';
 import {EmptyState} from '@app/commons/ui/empty-state/empty-state';
 import {Skeleton} from '@app/commons/ui/skeleton/skeleton';
@@ -15,7 +15,7 @@ type LoadState = 'loading' | 'ready' | 'notFound' | 'error';
 
 @Component({
   selector: 'app-report-page',
-  imports: [ReportEditor, ExamsTable, EmptyState, Skeleton, RouterLink, TranslatePipe],
+  imports: [ReportEditor, PatientReport, EmptyState, Skeleton, RouterLink, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './report-page.html'
 })
@@ -27,6 +27,7 @@ export class ReportPage {
   protected readonly report = signal<Report | null>(null);
   protected readonly state = signal<LoadState>('loading');
   private reportId = 0;
+  protected readonly printOnOpen = inject(ActivatedRoute).snapshot.queryParamMap.has('print');
 
   constructor() {
     inject(ActivatedRoute).paramMap

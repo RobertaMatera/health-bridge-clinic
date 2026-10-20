@@ -348,6 +348,27 @@
 }
 
 /**
+ * Print: the patient report doubles as a printable PDF (window.print()).
+ */
+@media print {
+  @page {
+    margin: 16mm;
+  }
+
+  body {
+    @apply bg-white text-ink;
+  }
+
+  .card {
+    @apply border-line;
+  }
+
+  .skip-link, app-toast-outlet {
+    @apply hidden;
+  }
+}
+
+/**
  * Legacy styles of the thesis version, removed once every screen is migrated.
  */
 .island {

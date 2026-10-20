@@ -27,11 +27,7 @@
       @if (authService.isDoctor()) {
         <app-report-editor [report]="report" (changed)="this.report.set($event)" (reload)="load()"/>
       } @else {
-        <h1 class="mb-6 text-[30px]">#{{ report.id }}</h1>
-        <section class="card overflow-hidden">
-          <app-exams-table [exams]="report.exams"/>
-        </section>
-        <p class="mt-6 whitespace-pre-line">{{ report.outcome }}</p>
+        <app-patient-report [report]="report" [printOnOpen]="printOnOpen"/>
       }
     }
   }
