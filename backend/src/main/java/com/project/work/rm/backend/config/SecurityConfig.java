@@ -41,6 +41,8 @@ public class SecurityConfig
                 .cors(withDefaults())
                 .authorizeHttpRequests(http -> http
                         .requestMatchers("/auth/**").permitAll()
+                        // API documentation holds no data; the endpoints it calls stay protected.
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                         // Reading reports is allowed to both roles; ReportsService limits patients to their own.
                         .requestMatchers(HttpMethod.GET, "/reports", "/reports/**").authenticated()
                         .requestMatchers("/reports/**", "/exams/**", "/analytics/**", "/users/**").hasRole(DOCTOR)
