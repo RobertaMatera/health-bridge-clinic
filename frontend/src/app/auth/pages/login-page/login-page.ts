@@ -1,52 +1,86 @@
-import {Component, inject, signal} from '@angular/core';
-import {AuthService} from '@app/auth/services/auth-service';
-import {Logo} from '@app/commons/components/logo/logo';
+import {ChangeDetectionStrategy, Component, DOCUMENT, inject, signal} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-
-interface LoginData {
-  email: string;
-  password: string;
-}
+import {finalize} from 'rxjs';
+import {AuthService} from '@app/auth/services/auth-service';
+import {DEMO_ACCOUNTS, DemoAccount} from '@app/auth/models/demo-accounts';
+import {Logo} from '@app/commons/components/logo/logo';
+import {LanguageSwitcher} from '@app/commons/components/language-switcher/language-switcher';
+import {TranslatePipe} from '@app/commons/i18n/translate-pipe';
+import {TranslationKey} from '@app/commons/i18n/i18n-types';
+import {errorMessageKey} from '@app/commons/errors/error-message';
+import {environment} from '@environments/environment';
+import {roleKey} from '@app/users/models/user-name';
 
 @Component({
   selector: 'app-login-page',
-  imports: [
-    Logo,
-    ReactiveFormsModule
-  ],
+  imports: [Logo, LanguageSwitcher, ReactiveFormsModule, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './login-page.html'
 })
 export class LoginPage {
-  authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
+  private readonly document = inject(DOCUMENT);
 
-  emailFormControl = new FormControl<string>('', {validators: [Validators.email]});
-  passwordFormControl = new FormControl('', {validators: [Validators.required]});
-
-  loginForm = new FormGroup({
-    email: this.emailFormControl,
-    password: this.passwordFormControl
+  protected readonly form = new FormGroup({
+    email: new FormControl('', {nonNullable: true, validators: [Validators.required, Validators.email]}),
+    password: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
+    remember: new FormControl(false, {nonNullable: true})
   });
 
-  showPassword = signal(false);
-  errorMessage = signal<string | null>(null);
+  protected readonly showPassword = signal(false);
+  protected readonly showForgotInfo = signal(false);
+  protected readonly submitted = signal(false);
+  protected readonly submitting = signal(false);
+  protected readonly serverError = signal<TranslationKey | null>(null);
 
-  login(event: Event) {
-    event.preventDefault();
+  protected readonly roleKey = roleKey;
+  protected readonly demoAccounts = environment.showDemoAccounts ? DEMO_ACCOUNTS : [];
 
-    if (!this.loginForm.valid) {
+  protected readonly features = [
+    {icon: 'fa-file-lines', title: 'auth.brand.feature1Title', text: 'auth.brand.feature1Text'},
+    {icon: 'fa-lock', title: 'auth.brand.feature2Title', text: 'auth.brand.feature2Text'},
+    {icon: 'fa-circle-check', title: 'auth.brand.feature3Title', text: 'auth.brand.feature3Text'}
+  ] as const satisfies readonly {icon: string; title: TranslationKey; text: TranslationKey}[];
+
+  protected emailError(): TranslationKey | null {
+    const control = this.form.controls.email;
+    if (!this.shouldShowError(control)) {
+      return null;
+    }
+    return control.hasError('required') ? 'validation.required' : 'validation.email';
+  }
+
+  protected passwordError(): TranslationKey | null {
+    return this.shouldShowError(this.form.controls.password) ? 'validation.required' : null;
+  }
+
+  protected fillDemo(account: DemoAccount): void {
+    this.form.patchValue({email: account.email, password: account.password});
+    this.serverError.set(null);
+    this.document.getElementById('login-submit')?.focus();
+  }
+
+  protected submit(): void {
+    this.submitted.set(true);
+    this.serverError.set(null);
+
+    if (this.form.invalid) {
+      // Move focus to the first field that needs attention.
+      const firstInvalid = this.form.controls.email.invalid ? 'email' : 'password';
+      this.document.getElementById(firstInvalid)?.focus();
       return;
     }
 
-    this.errorMessage.set(null);
-
-    this.authService.login(this.emailFormControl.value!, this.passwordFormControl.value!)
+    const {email, password, remember} = this.form.getRawValue();
+    this.submitting.set(true);
+    this.authService.login(email.trim(), password, remember)
+      .pipe(finalize(() => this.submitting.set(false)))
       .subscribe({
-        next: () => {
-        },
-        error: error => {
-          console.debug('Login error', error);
-          this.errorMessage.set('Login failed. Please check your email and password and try again.');
-        }
+        error: error => this.serverError.set(errorMessageKey(error))
       });
+  }
+
+  private shouldShowError(control: FormControl<string>): boolean {
+    return control.invalid && (control.touched || this.submitted());
   }
 }

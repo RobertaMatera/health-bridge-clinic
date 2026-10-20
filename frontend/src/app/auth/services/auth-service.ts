@@ -3,90 +3,81 @@ import {Router} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@environments/environment';
 import {User} from '@app/users/models/user-model';
-import {map, Observable} from 'rxjs';
+import {Observable, tap} from 'rxjs';
 import {UserRole} from '@app/users/models/user-role-enum';
 
+const USER_KEY = 'user';
+const PASSWORD_KEY = 'password';
+
+interface StoredSession {
+  user: User;
+  password: string;
+}
+
+/**
+ * HTTP Basic credentials are kept for the session only, unless the user ticks
+ * "Remember me", in which case they survive closing the browser (localStorage).
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  router = inject(Router);
-  httpClient = inject(HttpClient);
+  private readonly router = inject(Router);
+  private readonly httpClient = inject(HttpClient);
 
-  isLoggedIn = signal<boolean>(false);
-  isPatient = signal<boolean>(false);
-  isDoctor = signal<boolean>(false);
-  user = signal<User | null>(null);
+  private readonly session = signal<StoredSession | null>(readSession());
 
-  constructor() {
-    this.updateStatus();
-  }
+  readonly user = computed(() => this.session()?.user ?? null);
+  readonly isLoggedIn = computed(() => this.session() !== null);
+  readonly isDoctor = computed(() => this.user()?.role === UserRole.DOCTOR);
+  readonly isPatient = computed(() => this.user()?.role === UserRole.PATIENT);
 
-  private updateStatus(): void {
-    this.isLoggedIn.set(this.credentialsExist());
+  readonly token = computed(() => {
+    const session = this.session();
+    return session ? btoa(`${session.user.email}:${session.password}`) : null;
+  });
 
-    const role = this.getUser()?.role;
-    this.isPatient.set(role === UserRole.PATIENT);
-    this.isDoctor.set(role === UserRole.DOCTOR);
-    this.user.set(this.getUser());
-  }
-
-  private credentialsExist(): boolean {
-    if (localStorage.getItem('user') && localStorage.getItem('password')) {
-      return true;
-    }
-
-    return false;
-  }
-
-  logout(): void {
-    localStorage.removeItem('user');
-    localStorage.removeItem('password');
-
-    this.updateStatus();
-    this.router.navigate(['login']);
-  }
-
-  login(email: string, password: string) {
-    return this.validateCredentials(email, password)
-      .pipe(map(user => {
-        console.log('Valid user', user);
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('password', password);
-
-        this.updateStatus();
+  login(email: string, password: string, remember: boolean): Observable<User> {
+    return this.httpClient.post<User>(`${environment.backendUrl}/auth/login`, {email, password})
+      .pipe(tap(user => {
+        clearSession();
+        const storage = remember ? localStorage : sessionStorage;
+        storage.setItem(USER_KEY, JSON.stringify(user));
+        storage.setItem(PASSWORD_KEY, password);
+        this.session.set({user, password});
         this.router.navigate(['/']);
-
-        return user;
       }));
   }
 
-  private validateCredentials(email: string, password: string): Observable<User> {
-    return this.httpClient.post(`${environment.backendUrl}/auth/login`, {email, password}) as Observable<User>;
+  logout(): void {
+    clearSession();
+    this.session.set(null);
+    this.router.navigate(['login']);
   }
 
-  getUser(): User | null {
-    const json = localStorage.getItem('user');
-
-    if (!json) {
-      return null;
-    }
-
-    return JSON.parse(json);
+  hasRole(role: UserRole): boolean {
+    return this.user()?.role === role;
   }
+}
 
-  token = computed(() => {
-    const email = this.user()?.email;
-    const password = localStorage.getItem('password');
-
-    if (!email || !password) {
-      return null;
+function readSession(): StoredSession | null {
+  for (const storage of [sessionStorage, localStorage]) {
+    try {
+      const user = storage.getItem(USER_KEY);
+      const password = storage.getItem(PASSWORD_KEY);
+      if (user && password) {
+        return {user: JSON.parse(user) as User, password};
+      }
+    } catch {
+      // Unreadable or corrupt storage counts as signed out.
     }
+  }
+  return null;
+}
 
-    return btoa(`${email}:${password}`);
-  });
-
-  hasRole(role: UserRole) {
-    return this.getUser()?.role === role;
+function clearSession(): void {
+  for (const storage of [sessionStorage, localStorage]) {
+    storage.removeItem(USER_KEY);
+    storage.removeItem(PASSWORD_KEY);
   }
 }
