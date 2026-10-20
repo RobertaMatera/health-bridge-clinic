@@ -30,7 +30,6 @@ export class AuthService {
   readonly user = computed(() => this.session()?.user ?? null);
   readonly isLoggedIn = computed(() => this.session() !== null);
   readonly isDoctor = computed(() => this.user()?.role === UserRole.DOCTOR);
-  readonly isPatient = computed(() => this.user()?.role === UserRole.PATIENT);
 
   readonly token = computed(() => {
     const session = this.session();

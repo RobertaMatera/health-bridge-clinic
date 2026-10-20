@@ -10,10 +10,6 @@ import {environment} from '@environments/environment';
 export class UsersService {
   private readonly httpClient = inject(HttpClient);
 
-  getAll(): Observable<User[]> {
-    return this.httpClient.get<User[]>(`${environment.backendUrl}/users`);
-  }
-
   getPatients(): Observable<User[]> {
     return this.httpClient.get<User[]>(`${environment.backendUrl}/users/patients`);
   }

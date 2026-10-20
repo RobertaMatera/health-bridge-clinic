@@ -4,7 +4,6 @@ import {NewReport, Report, ReportChanges} from '@app/reports/models/report-model
 import {Exam} from '@app/exams/models/exam-model';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@environments/environment';
-import {ReportStatus} from '@app/reports/models/report-status-enum';
 
 @Injectable({
   providedIn: 'root'
@@ -35,9 +34,5 @@ export class ReportsService {
   // The API answers with the whole updated report.
   createExam(reportID: number, exam: Exam): Observable<Report> {
     return this.httpClient.post<Report>(`${environment.backendUrl}/reports/${reportID}/exams`, exam);
-  }
-
-  getByStatus(status: ReportStatus): Observable<Report[]> {
-    return this.httpClient.get<Report[]>(`${environment.backendUrl}/reports/by-status/${status}`);
   }
 }
