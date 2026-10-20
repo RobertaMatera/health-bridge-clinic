@@ -71,7 +71,8 @@ public class DatabaseSeeder implements ApplicationRunner {
                 new SeedExam("Ferritina", "ng/mL", 45f, 30f, 400f),
                 new SeedExam("Calcio", "mg/dL", 9.4f, 8.6f, 10.2f));
 
-        report(massari, poi, ReportStatus.FINALIZED, Duration.ofDays(9), Duration.ofDays(7),
+        // Finalized a few hours ago, so "finalized this week" is never empty in the demo.
+        report(massari, poi, ReportStatus.FINALIZED, Duration.ofDays(3), Duration.ofHours(2),
                 "I valori sono nella norma. Continui con l'alimentazione e l'attività fisica attuali; ripeteremo il controllo tra 12 mesi.",
                 new SeedExam("Glicemia a digiuno", "mg/dL", 92f, 70f, 99f),
                 new SeedExam("Colesterolo totale", "mg/dL", 180f, null, 200f),
