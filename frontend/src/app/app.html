@@ -1,7 +1,21 @@
-<app-navbar></app-navbar>
+<a href="#main" class="skip-link" (click)="skipToContent($event)">{{ 'common.skipToContent' | t }}</a>
 
-<div class="mx-auto max-w-7xl px-6">
-  <router-outlet></router-outlet>
-</div>
+@switch (layout()) {
+  @case ('doctor') {
+    <app-doctor-shell>
+      <router-outlet/>
+    </app-doctor-shell>
+  }
+  @case ('patient') {
+    <app-patient-shell>
+      <router-outlet/>
+    </app-patient-shell>
+  }
+  @default {
+    <main id="main" tabindex="-1" class="outline-none">
+      <router-outlet/>
+    </main>
+  }
+}
 
 <app-toast-outlet/>
