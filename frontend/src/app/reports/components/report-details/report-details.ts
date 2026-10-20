@@ -55,7 +55,7 @@ export class ReportDetails {
       return;
     }
 
-    this.reportsService.update(updatedReport.id, updatedReport)
+    this.reportsService.update(updatedReport.id, {patient: updatedReport.patient, outcome: updatedReport.outcome ?? null})
       .subscribe({
         next: () => this.change.emit(),
         error: error => this.toastService.httpError(error)
@@ -67,7 +67,7 @@ export class ReportDetails {
       return;
     }
 
-    this.reportsService.finalize(updatedReport.id, updatedReport)
+    this.reportsService.finalize(updatedReport.id, {patient: updatedReport.patient, outcome: updatedReport.outcome ?? null})
       .subscribe({
         next: () => this.change.emit(),
         error: error => this.toastService.httpError(error)

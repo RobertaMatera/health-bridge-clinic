@@ -8,7 +8,7 @@ import {environment} from '@environments/environment';
   providedIn: 'root'
 })
 export class UsersService {
-  httpClient = inject(HttpClient);
+  private readonly httpClient = inject(HttpClient);
 
   getAll(): Observable<User[]> {
     return this.httpClient.get<User[]>(`${environment.backendUrl}/users`);

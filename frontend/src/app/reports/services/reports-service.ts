@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Report} from '@app/reports/models/report-model';
+import {NewReport, Report, ReportChanges} from '@app/reports/models/report-model';
 import {Exam} from '@app/exams/models/exam-model';
 import {HttpClient} from '@angular/common/http';
 import {environment} from '@environments/environment';
@@ -10,13 +10,13 @@ import {ReportStatus} from '@app/reports/models/report-status-enum';
   providedIn: 'root'
 })
 export class ReportsService {
-  httpClient = inject(HttpClient);
+  private readonly httpClient = inject(HttpClient);
 
   getAll(): Observable<Report[]> {
     return this.httpClient.get<Report[]>(`${environment.backendUrl}/reports`);
   }
 
-  create(report: Report): Observable<Report> {
+  create(report: NewReport): Observable<Report> {
     return this.httpClient.post<Report>(`${environment.backendUrl}/reports`, report);
   }
 
@@ -24,16 +24,17 @@ export class ReportsService {
     return this.httpClient.get<Report>(`${environment.backendUrl}/reports/${reportID}`);
   }
 
-  update(reportID: number, updatedReport: Report): Observable<Report> {
-    return this.httpClient.put<Report>(`${environment.backendUrl}/reports/${reportID}`, updatedReport);
+  update(reportID: number, changes: ReportChanges): Observable<Report> {
+    return this.httpClient.put<Report>(`${environment.backendUrl}/reports/${reportID}`, changes);
   }
 
-  finalize(reportID: number, updatedReport: Report): Observable<Report> {
-    return this.httpClient.put<Report>(`${environment.backendUrl}/reports/${reportID}/finalize`, updatedReport);
+  finalize(reportID: number, changes: ReportChanges): Observable<Report> {
+    return this.httpClient.put<Report>(`${environment.backendUrl}/reports/${reportID}/finalize`, changes);
   }
 
-  createExam(reportID: number, exam: Exam): Observable<Exam> {
-    return this.httpClient.post<Exam>(`${environment.backendUrl}/reports/${reportID}/exams`, exam);
+  // The API answers with the whole updated report.
+  createExam(reportID: number, exam: Exam): Observable<Report> {
+    return this.httpClient.post<Report>(`${environment.backendUrl}/reports/${reportID}/exams`, exam);
   }
 
   getByStatus(status: ReportStatus): Observable<Report[]> {

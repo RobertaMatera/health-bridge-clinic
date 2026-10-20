@@ -137,6 +137,11 @@ export const it: Dictionary = {
       kpiOutOfRangeDetail: {one: 'in {count} referto da rivedere', other: 'in {count} referti da rivedere'},
       filterLabel: 'Filtra per stato',
       all: 'Tutti',
+      filters: {
+        CREATED: 'Creati',
+        IN_PROGRESS: 'In lavorazione',
+        FINALIZED: 'Finalizzati'
+      },
       searchLabel: 'Cerca referti',
       searchPlaceholder: 'Cerca paziente o n° referto',
       sortLabel: 'Ordina per',

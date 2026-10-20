@@ -1,3 +1,6 @@
+@if (authService.isDoctor()) {
+  <app-doctor-reports/>
+} @else {
 <h1>Referti</h1>
 
 <div class="filter-bar">
@@ -35,7 +38,7 @@
           <app-user-badge [user]="report.patient"></app-user-badge>
         </td>
         <td>
-          <app-report-status-badge [status]="report.status"></app-report-status-badge>
+          <app-report-status-badge [status]="report.status" audience="patient"/>
         </td>
         <td>
           {{ report.exams?.length ?? 0 }}
@@ -55,4 +58,5 @@
   <app-report-dialog
     (dismiss)="showCreateDialog.set(false)"
     (confirm)="onReportDialogConfirm($event)"></app-report-dialog>
+}
 }

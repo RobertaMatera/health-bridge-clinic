@@ -59,7 +59,7 @@ export class ReportForm implements OnInit {
     }
 
     this.submit.emit({
-      id: this.report()?.id,
+      ...this.report()!,
       patient: this.patientFormControl.value!,
       outcome: this.outcomeFormControl.value
     });
@@ -73,7 +73,7 @@ export class ReportForm implements OnInit {
     }
 
     this.finalize.emit({
-      id: this.report()?.id,
+      ...this.report()!,
       patient: this.patientFormControl.value!,
       outcome: this.outcomeFormControl.value
     });

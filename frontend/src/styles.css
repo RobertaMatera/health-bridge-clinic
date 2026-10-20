@@ -289,7 +289,7 @@
     @apply inline-flex min-h-11 shrink-0 cursor-pointer items-center gap-2 rounded-full border border-input bg-surface px-4 text-[15px] font-semibold text-ink-soft sm:rounded-lg sm:border-transparent sm:bg-transparent sm:text-muted;
   }
 
-  .tab[aria-selected="true"] {
+  .tab[aria-pressed="true"] {
     @apply border-brand bg-brand text-white sm:border-transparent sm:bg-surface sm:text-ink sm:shadow-sm;
   }
 
@@ -297,7 +297,7 @@
     @apply inline-flex h-[22px] min-w-[22px] items-center justify-center rounded-full bg-hover px-1.5 text-xs text-ink-soft;
   }
 
-  .tab[aria-selected="true"] .tab-count {
+  .tab[aria-pressed="true"] .tab-count {
     @apply bg-white/20 text-white sm:bg-hover sm:text-ink-soft;
   }
 

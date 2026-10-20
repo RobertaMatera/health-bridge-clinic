@@ -138,6 +138,11 @@ export const en = {
       kpiOutOfRangeDetail: {one: 'in {count} report to review', other: 'in {count} reports to review'},
       filterLabel: 'Filter by status',
       all: 'All',
+      filters: {
+        CREATED: 'Created',
+        IN_PROGRESS: 'In progress',
+        FINALIZED: 'Finalized'
+      },
       searchLabel: 'Search reports',
       searchPlaceholder: 'Search patient or report no.',
       sortLabel: 'Sort by',

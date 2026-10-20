@@ -35,8 +35,8 @@ export class ExamDialog {
     } else {
       this.reportsService.createExam(this.report().id!, examFromForm)
         .subscribe({
-          next: createdExam => {
-            this.confirm.emit(createdExam);
+          next: () => {
+            this.confirm.emit(examFromForm);
           },
           error: error => this.error.set(error.message)
         });

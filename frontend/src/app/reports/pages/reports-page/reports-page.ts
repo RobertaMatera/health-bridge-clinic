@@ -10,10 +10,11 @@ import {UserRole} from '@app/users/models/user-role-enum';
 import {ReportDialog} from '@app/reports/components/report-dialog/report-dialog';
 import {HasRole} from '@app/auth/directives/has-role-directive';
 import {ReportStatus} from '@app/reports/models/report-status-enum';
+import {DoctorReports} from '@app/reports/components/doctor-reports/doctor-reports';
 
 @Component({
   selector: 'app-reports-page',
-  imports: [RouterLink, UserBadge, ReportStatusBadge, ReportDialog, HasRole],
+  imports: [RouterLink, UserBadge, ReportStatusBadge, ReportDialog, HasRole, DoctorReports],
   templateUrl: './reports-page.html'
 })
 export class ReportsPage implements OnInit {
@@ -35,7 +36,7 @@ export class ReportsPage implements OnInit {
   loadData() {
     const user = this.authService.user();
 
-    if (!user || !user.id) {
+    if (!user || !user.id || this.authService.isDoctor()) {
       return;
     }
 
