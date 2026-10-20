@@ -40,12 +40,12 @@ public class User implements UserDetails {
 
     @NotBlank(message = "Nome è obbligatorio")
     @Size(min = 3, max = 50, message = "Nome deve essere tra 3 e 50 caratteri")
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String firstName;
 
     @NotBlank(message = "Cognome è obbligatorio")
     @Size(min = 3, max = 50, message = "Cognome deve essere tra 3 e 50 caratteri")
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String lastName;
 
     @NotBlank(message = "Email è obbligatoria")
