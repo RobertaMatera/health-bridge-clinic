@@ -1,6 +1,37 @@
-<a
-  routerLink="/"
-  class="flex items-center font-semibold text-gray-900 dark:text-white">
-  <i class="fa-solid fa-staff-snake fa-xl color-primary me-2"></i>
-  <span class="font-bold">Health Bridge Clinic</span>
-</a>
+<svg
+  [class]="markSize[size()]"
+  class="shrink-0"
+  viewBox="0 0 48 48"
+  fill="none"
+  aria-hidden="true">
+  <rect
+    width="48"
+    height="48"
+    rx="13"
+    [class]="variant() === 'inverse' ? 'fill-deep-tile' : 'fill-brand'"/>
+  <path
+    d="M10 36c0-9 6-14.5 14-14.5S38 27 38 36"
+    class="stroke-white"
+    stroke-width="4.5"
+    stroke-linecap="round"/>
+  <path
+    d="M24 8.5v7M19.5 12h9"
+    class="stroke-mint"
+    stroke-width="4.5"
+    stroke-linecap="round"/>
+</svg>
+
+@if (wordmark()) {
+  <span class="leading-none">
+    <span
+      class="block font-bold tracking-tight"
+      [class]="nameSize[size()]">HealthBridge</span>
+    @if (tagline()) {
+      <span
+        class="mt-1 block text-[11px] font-semibold tracking-[0.2em]"
+        [class]="variant() === 'inverse' ? 'text-on-deep-subtle' : 'text-muted'">CLINIC</span>
+    }
+  </span>
+} @else {
+  <span class="sr-only">HealthBridge Clinic</span>
+}
