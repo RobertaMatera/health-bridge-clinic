@@ -84,6 +84,9 @@ frontend/.DS_Store
 frontend/Thumbs.db
 
 # ===== GENERALE (root) =====
+# UI mockup references (local only)
+mockup/
+
 .DS_Store
 .env
 .env.local
