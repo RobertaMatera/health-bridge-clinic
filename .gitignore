@@ -15,7 +15,6 @@ backend/bin/
 *.lst
 
 # Maven
-backend/.mvn/
 backend/pom.xml.tag
 backend/pom.xml.releaseBackup
 backend/release.properties
@@ -59,8 +58,7 @@ frontend/.DS_Store
 frontend/.angular/cache/
 frontend/.angular/tmp/
 
-# Dependencies
-frontend/package-lock.json
+# Dependencies (package-lock.json is committed for reproducible installs)
 frontend/yarn.lock
 frontend/pnpm-lock.yaml
 
