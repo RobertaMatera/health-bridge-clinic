@@ -82,6 +82,19 @@ export const en = {
   toast: {
     dismiss: 'Dismiss notification'
   },
+  statusPages: {
+    home: 'Back to my reports',
+    login: 'Go to sign in',
+    notFound: {
+      title: 'Page not found',
+      text: 'The address may be mistyped, or the page may have been moved or removed.'
+    },
+    error: {
+      title: 'Something went wrong',
+      text: 'This page could not be loaded. Check your connection and try again. If the problem continues, contact the clinic office.',
+      retry: 'Try again'
+    }
+  },
   auth: {
     brand: {
       headline: 'The digital bridge between doctor and patient.',

@@ -7,11 +7,9 @@
     </div>
   }
   @case ('notFound') {
-    <section class="card mx-auto mt-6 max-w-xl">
-      <app-empty-state icon="fa-file-circle-question" [heading]="'reports.editor.notFoundTitle' | t" [text]="'errors.REPORT_NOT_FOUND' | t">
-        <a routerLink="/reports" class="btn btn-primary btn-lg">{{ 'reports.editor.backToList' | t }}</a>
-      </app-empty-state>
-    </section>
+    <app-status-page code="404" [heading]="'reports.editor.notFoundTitle' | t" [text]="'errors.REPORT_NOT_FOUND' | t">
+      <a routerLink="/reports" class="btn btn-primary btn-lg">{{ 'reports.editor.backToList' | t }}</a>
+    </app-status-page>
   }
   @case ('error') {
     <section class="card mx-auto mt-6 max-w-xl">
