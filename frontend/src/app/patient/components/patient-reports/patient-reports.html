@@ -48,7 +48,7 @@
       }
       @default {
         @for (report of sortedReports(); track report.id) {
-          <article class="card flex flex-wrap items-center justify-between gap-5 p-5 sm:p-[22px]" [attr.aria-labelledby]="'report-card-' + report.id">
+          <article class="fade-in card flex flex-wrap items-center justify-between gap-5 p-5 sm:p-[22px]" [attr.aria-labelledby]="'report-card-' + report.id">
             <div class="flex min-w-0 flex-col gap-2">
               <div class="flex flex-wrap items-center gap-3">
                 <h3 [id]="'report-card-' + report.id" class="card-title">{{ 'patient.home.cardTitle' | t: {id: report.id} }}</h3>

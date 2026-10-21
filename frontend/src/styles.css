@@ -360,6 +360,14 @@
     @apply animate-pulse rounded-md bg-line;
   }
 
+  /*
+   * Loaded content replaces its skeleton with a short fade. Opacity only: a transform would
+   * leave a containing block behind and break the fixed action bars inside these pages.
+   */
+  .fade-in {
+    animation: fade-in 200ms ease-out backwards;
+  }
+
   /* First paint, before the app boots. Fades in late so fast loads skip it entirely. */
   .boot-splash {
     @apply fixed inset-0 flex flex-col items-center justify-center gap-6 bg-mist;
@@ -393,6 +401,25 @@
 
   .kpi-value {
     @apply mt-1.5 text-4xl font-bold tracking-tight;
+  }
+}
+
+/* Route changes cross-fade (withViewTransitions); kept short so navigation stays snappy. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 160ms;
+}
+
+/* The loading bar keeps its own layer so it does not fade with the page. */
+app-loading-bar {
+  view-transition-name: loading-bar;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
 

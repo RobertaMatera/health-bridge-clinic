@@ -112,7 +112,7 @@
           </div>
         } @else {
           <!-- md and up: table -->
-          <div class="overflow-x-auto max-md:hidden">
+          <div class="fade-in overflow-x-auto max-md:hidden">
             <table class="data-table">
               <thead>
                 <tr>
@@ -163,7 +163,7 @@
           </div>
 
           <!-- below md: cards -->
-          <ul class="flex flex-col gap-2.5 md:hidden">
+          <ul class="fade-in flex flex-col gap-2.5 md:hidden">
             @for (report of visibleReports(); track report.id) {
               <li>
                 <a

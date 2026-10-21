@@ -25,9 +25,9 @@
   @default {
     @if (report(); as report) {
       @if (authService.isDoctor()) {
-        <app-report-editor [report]="report" (changed)="this.report.set($event)" (reload)="load()"/>
+        <app-report-editor class="fade-in block" [report]="report" (changed)="this.report.set($event)" (reload)="load()"/>
       } @else {
-        <app-patient-report [report]="report" [printOnOpen]="printOnOpen"/>
+        <app-patient-report class="fade-in block" [report]="report" [printOnOpen]="printOnOpen"/>
       }
     }
   }
