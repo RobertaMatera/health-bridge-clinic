@@ -1,185 +1,155 @@
 # Health Bridge Clinic
 
-A full-stack web application for a private clinic: a digital **bridge between doctors and patients**.
-Doctors create medical reports, record lab exams and write an outcome; once a report is finalized it
-becomes read-only and the patient can read it (and save it as PDF). Doctors also see clinic statistics.
+Health Bridge Clinic is a medical reports application for a private clinic. Doctors create and manage medical reports, add laboratory exams with reference ranges, and finalize clinical outcomes. Patients see only their own reports; Patients see only their own reports. Once a report is finalized, they can read the outcome in plain language and print a ready-to-share version.
 
-## Project background
+Evolved from my BSc thesis project — see the [original version](https://github.com/RobertaMatera/rm-project-work-16).
 
-Health Bridge Clinic started as my BSc thesis project in Information Technology for Digital
-Enterprises (Pegaso Digital University, 2026). The original version, as submitted, is preserved
-here: [rm-project-work-16](https://github.com/RobertaMatera/rm-project-work-16).
+## Technology stack
 
-This repository continues that work. The purpose, functional requirements and tech stack are
-unchanged; the focus of this version is a redesigned user experience, a consistent design system,
-full responsiveness and English/Italian localisation.
-
-## How I used AI
-
-I used AI (Claude) as a design and development assistant throughout this project.
-I remained responsible for every decision and for the final code.
-
-**My role**
-- Defined the product goals, user roles and functional requirements
-- Made the main UX, design-system and architecture decisions
-- Reviewed, tested and integrated every change before committing it
-
-**Where AI helped**
-- **Design system & UX:** exploring and refining colour tokens, typography, accessibility
-  (WCAG 2.1 AA) and layouts, starting from my original design
-- **Code refinement:** suggesting improvements to my code and catching issues
-- **Learning:** explaining concepts and best practices as I worked
-- **Git workflow:** help with commands, history management and commit structure
-
-Commits created with AI assistance carry a `Co-Authored-By` trailer.
-
-![Doctor's reports list](docs/screenshots/02-doctor-reports.png)
-
-| Report editor | Statistics |
+| Layer | Stack |
 |---|---|
-| ![Report editor](docs/screenshots/03-report-editor.png) | ![Statistics](docs/screenshots/04-statistics.png) |
+| Backend | Java 25, Spring Boot 4, Spring Data JPA, Spring Security, BCrypt, H2, Springdoc OpenAPI |
+| Frontend | Angular 21, TypeScript, RxJS, Tailwind CSS 4, Font Awesome |
+| Testing | JUnit 5 + Mockito, Angular unit tests with Vitest |
 
-| Login | Patient home | Mobile (Italian) |
-|---|---|---|
-| ![Login](docs/screenshots/01-login.png) | ![Patient home](docs/screenshots/05-patient-home.png) | ![Patient report on a phone](docs/screenshots/07-patient-report-mobile.png) |
+## Screenshots
 
-## Features
+![Login screen](docs/screenshots/01-login.png)
 
-- **Role-based access** (RF01): doctors and patients land in their own area after signing in.
-- **Report lifecycle** `CREATED → IN_PROGRESS → FINALIZED` (RF02–RF05). Adding the first exam moves a report
-  in progress; finalization needs a patient, at least one exam and an outcome; finalized reports are immutable.
-- **Exams with reference ranges**, flagged Low / High / Borderline (within 5% of a limit) / Normal.
-- **Patients see only their own reports** (RF09) and only once they are finalized, with a plain-language summary
-  and a printable PDF.
-- **Statistics** (RF10): totals, average time to finalize, reports per week, reports by status, users.
-- **English and Italian** with runtime switching, locale-aware dates and numbers.
-- **Responsive** from 360 px to 1440 px and **accessible** (WCAG 2.1 AA: keyboard navigation, focus rings,
-  skip link, labelled forms, accessible dialogs, colour never the only signal).
-
-## Tech stack
-
-| | |
+| Doctor dashboard | Report editor |
 |---|---|
-| Backend | Java 25, Spring Boot 4, Spring Data JPA, Spring Security (HTTP Basic, BCrypt), Lombok, MapStruct, H2, springdoc OpenAPI |
-| Frontend | Angular 21 (standalone components, signals, zoneless), RxJS, TypeScript, Tailwind CSS 4, Font Awesome |
-| Tests | JUnit 5 + Mockito, Vitest |
+| ![Doctor reports dashboard](docs/screenshots/02-doctor-reports.png) | ![Report editor](docs/screenshots/03-report-editor.png) |
 
-Architecture: the backend is layered (controller → service → repository) with DTOs and MapStruct mappers;
-errors are returned as `{status, code, message, path, fieldErrors}` with stable codes that the frontend
-translates. The frontend is organised in feature folders (`auth`, `reports`, `exams`, `patient`, `analytics`,
-`users`, `commons`) with shared UI primitives in `commons/ui` and design tokens in `src/styles.css`.
+| Statistics view | Patient report view |
+|---|---|
+| ![Statistics dashboard](docs/screenshots/04-statistics.png) | ![Patient home](docs/screenshots/05-patient-home.png) |
+
+| Patient report on mobile | Doctor report on mobile |
+|---|---|
+| ![Patient report on mobile](docs/screenshots/07-patient-report-mobile.png) | ![Doctor reports on mobile](docs/screenshots/06-doctor-reports-mobile.png) |
+
+## Key features
+
+- Role-based access for doctors and patients.
+- Medical report lifecycle: `CREATED → IN_PROGRESS → FINALIZED`.
+- Exam entries with reference ranges and value classification (`Low`, `High`, `Borderline`, `Normal`).
+- Patients see only their own reports; outcomes become visible once finalized.
+- Clinic statistics such as totals, average finalization time, weekly report volume, and status breakdowns.
+- English and Italian locale switching at runtime.
+- Responsive layout for mobile and desktop, with accessibility-oriented UI patterns.
+
+## Design decisions
+
+- One brand color, bridge teal `#0B6E7F`, every other color assigned a single meaning (report status, out-of-range values, and UI emphasis).
+- Status is never conveyed by color alone; every state includes a text label (WCAG 2.1 AA, 1.4.1).
+- Plain language for patient-facing states, such as “Ready” instead of “Finalized”.
+- KPI tiles and bar charts replace pie charts for faster comparison and clearer scanning.
+- Mobile-first responsive layouts use a sidebar on desktop and a drawer/card layout on phones.
+
+## Architecture and implementation notes
+
+The application follows a clean domain-oriented structure:
+
+- Backend: controller → service → repository layers with DTOs and MapStruct mappers.
+- Security: HTTP Basic authentication with BCrypt password hashing and role-based endpoint protection.
+- API consistency: a shared error response format carries status, code, message, path, and field-level validation details.
+- Frontend: feature-oriented Angular structure for auth, reports, exams, patient views, analytics, and shared UI primitives.
+- Demo data: the backend seeds realistic users and reports in multiple states for a complete local demo experience.
 
 ## Prerequisites
 
-- **JDK 25** (the version used in `pom.xml`). Maven is not required: use the wrapper `./mvnw`.
-- **Node.js 22 LTS** (or 20.19+ / 24) and **npm 11**. The project declares `npm@11.9.0`; npm 10 can crash on
-  install, so if `npm --version` shows 10, run `npx npm@11 install` (or `corepack enable`).
+- JDK 25
+- Node.js 22 LTS (or 20.19+ / 24)
+- npm 11 (the project declares `npm@11.9.0`)
 
-## Run from the terminal
+> If `npm --version` shows 10, upgrade first with `npx npm@11 install` or enable Corepack.
+
+## Quick start
+
+Run the backend and frontend in separate terminals.
 
 ```bash
-# Backend: http://localhost:8080 (Swagger UI: /swagger-ui.html)
+# Backend (http://localhost:8080, Swagger UI at http://localhost:8080/swagger-ui.html)
 cd backend
 ./mvnw spring-boot:run
+```
 
-# Frontend: http://localhost:4200
+```bash
+# Frontend (http://localhost:4200)
 cd frontend
 npm install
 npm start
 ```
 
-Tests and builds:
+## Verification and build commands
 
 ```bash
-cd backend && ./mvnw verify          # compiles, runs the JUnit tests, packages the jar
-cd frontend && npm test -- --watch=false
-cd frontend && npm run build
+# Backend tests and package verification
+(cd backend && ./mvnw verify)
+
+# Frontend unit tests
+(cd frontend && npm test -- --watch=false)
+
+# Frontend production build
+(cd frontend && npm run build)
 ```
 
-### Database
+## Demo accounts
 
-H2 runs in file mode (`backend/projectworkmrdb.mv.db`). On an **empty** database the seeder creates the demo
-accounts and 20 reports in every state, with timestamps spread over the last weeks.
-To start again from the demo data, stop the backend and delete the database file:
-
-```bash
-cd backend && rm -f projectworkmrdb.mv.db projectworkmrdb.trace.db
-```
-
-Do this once after upgrading from the thesis version: the schema changed (reference ranges, longer outcome,
-names no longer unique) and Hibernate only adds columns, it never removes constraints.
-
-### Demo accounts
+The application includes seeded demo accounts for local development and portfolio demos. These are not production accounts and are intended for demonstration only.
 
 | Role | Name | Email | Password |
 |---|---|---|---|
-| Doctor | Dr. Giorgio Poi | `g.poi@gmail.com` | `doctor2` |
-| Doctor | Dr. Claudia Rossi | `claudiarossi@gmail.com` | `doctor1` |
-| Patient | Giuseppe Massari | `g.massari@gmail.com` | `patient1` |
-| Patient | Luisa Spagnoli | `spagnoli.luisa@libero.it` | `patient2` |
+| Doctor | Dr. Giorgio Poi | `g.poi@healthbridge.test` | `doctor2` |
+| Doctor | Dr. Claudia Rossi | `claudiarossi@healthbridge.test` | `doctor1` |
+| Patient | Giuseppe Massari | `g.massari@healthbridge.test` | `patient1` |
+| Patient | Luisa Spagnoli | `spagnoli.luisa@healthbridge.test` | `patient2` |
 
-Four more patients (`patient3` … `patient6`) are seeded. In development builds the login page has a
-"Demo accounts" box that fills these in; it is hidden in production builds (`showDemoAccounts` in
-`src/environments`).
+Additional seeded patients use the passwords `patient3` through `patient6`:
 
-## Run in IntelliJ IDEA
+- Anna Colombo — `a.colombo@healthbridge.test` — `patient3`
+- Marco Ferri — `m.ferri@healthbridge.test` — `patient4`
+- Sara Greco — `s.greco@healthbridge.test` — `patient5`
+- Paolo Bianchi — `p.bianchi@healthbridge.test` — `patient6`
 
-1. **File → Open** the repository root. When asked, load `backend/pom.xml` as a Maven project.
-2. **Settings → Build, Execution, Deployment → Compiler → Annotation Processors**: tick *Enable annotation
-   processing* (needed by Lombok and MapStruct). The Lombok plugin is bundled with IntelliJ.
-3. Set the project SDK to JDK 25 (**File → Project Structure → Project**).
-4. Run `BackendApplication` (green arrow next to `main`).
-5. Frontend: open `frontend/package.json` and click the run icon next to `start`, or create an **npm** run
-   configuration with the `start` script. Run `npm install` once first.
+In development mode, the login page shows a “Demo accounts” helper; the production configuration disables that helper.
 
-## Run in Eclipse
+## Database and reset
 
-Use **Eclipse IDE for Enterprise Java and Web Developers 2025-12 or newer** (Java 25 support).
+The backend uses H2 in file mode for local development. On a fresh database, the seeder creates realistic demo users and reports across the lifecycle.
 
-1. **Lombok**: close Eclipse and run the installer that Maven already downloaded, pointing it at your Eclipse
-   installation:
-   `java -jar ~/.m2/repository/org/projectlombok/lombok/1.18.42/lombok-1.18.42.jar`
-   (run `./mvnw compile` once in `backend` if the file is not there yet).
-2. **Window → Preferences → Maven → Annotation Processing**: select *Automatically configure JDT APT*, so that
-   MapStruct mappers are generated (m2e-apt).
-3. **Window → Preferences → Java → Installed JREs**: add JDK 25 and make it the default.
-4. **File → Import → Maven → Existing Maven Projects** and select the `backend` folder.
-5. Run `src/main/java/.../BackendApplication.java` with **Run As → Java Application** (or **Run As → Maven
-   build…** with the goal `spring-boot:run`).
-6. Frontend: open the `frontend` folder with **File → Open Projects from File System**. Wild Web Developer
-   (bundled) provides TypeScript, HTML and CSS editing. Start the app from the **Terminal** view
-   (`npm install`, then `npm start`) or with an **External Tools** configuration that runs `npm` with the
-   argument `start` in the working directory `${project_loc}`.
+To reset the local demo data:
 
-**Troubleshooting**
-
-- *Mapper implementations cannot be found* (`ReportsMapperImpl`): check step 2, then **Project → Clean** and
-  **Maven → Update Project**.
-- *Getters/setters missing*: Lombok is not installed in Eclipse (step 1); restart Eclipse afterwards.
-- *Unsupported class file major version*: Eclipse or the project runs on a JDK older than 25.
-
-Lombok prints `sun.misc.Unsafe` deprecation warnings when it runs on JDK 25. They come from Lombok itself and
-do not affect the build.
-
-## Project structure
-
-```
-backend/   Spring Boot API (controller, service, repository, model, dto, mapper, exception, config)
-frontend/  Angular app (src/app/<feature>/{pages,components,models,services}, src/styles.css for tokens)
-docs/      Screenshots
-bruno-collection/  Example API requests (Bruno)
+```bash
+cd backend
+rm -f projectworkmrdb.mv.db projectworkmrdb.trace.db
 ```
 
-## Known limitations
+Then restart the backend to reseed the database.
 
-- **HTTP Basic credentials are kept in the browser** (session storage, or local storage with "Remember me")
-  because Basic Auth is part of the original design. A production version should switch to a server session
-  cookie (Spring Session with CSRF protection) or short-lived tokens.
-- **Password reset, notifications and appointment booking** are placeholders.
-- Report history is reconstructed from timestamps; a dedicated audit table would be needed for a full log.
+## Security and limitations
 
-See [CHANGELOG.md](CHANGELOG.md) for what changed from the thesis version and why.
+- Credentials are held in session storage for the browser tab and sent with each request (HTTP Basic). If the user selects “Remember me,” the credentials are kept in localStorage — acceptable for a local demo only, since they persist and are readable by scripts on the page. A production version would use short-lived tokens (for example, OAuth2/JWT in an HttpOnly cookie) instead of storing the password.
+- The project is a demonstration application, not a production-ready clinical system.
+- Password reset, notifications, appointment booking, and other operational features are out of scope for this portfolio project.
+- Report history is reconstructed from timestamps; a dedicated audit table would be required for full enterprise-grade traceability.
+- The application does not claim medical-device compliance, regulatory compliance, or patient-data processing readiness beyond the local demo context.
+
+## AI-assisted development disclosure
+
+I used Claude as an AI-assisted design and development tool throughout this project. I defined the product goals and made the main UX, design-system and architecture decisions; I reviewed, tested and integrated every change and remain responsible for the final code. AI support helped with design-system and UI refinement, accessibility considerations, code review, technical learning, and Git workflow guidance.
+
+## Project background
+
+Health Bridge Clinic began as my BSc thesis project in Information Technology for Digital Enterprises at Pegaso Digital University (2026). The original submitted version is preserved here: [rm-project-work-16](https://github.com/RobertaMatera/rm-project-work-16).
+
+This repository continues that work. The original purpose, functional requirements, and technology stack remain the same, while this version focuses on a redesigned user experience, a more consistent design system, improved responsiveness, and English/Italian localization.
+
+See [CHANGELOG.md](CHANGELOG.md) for the redesign changes that distinguish this version from the original thesis project.
+
+## License
+
+Code is provided under the MIT License. Design, logo, and screenshots are © Roberta Matera, all rights reserved.
 
 ## Author
-
-Roberta Matera
+Roberta Matera — [Portfolio](https://robertamatera.vercel.app/en) · [LinkedIn](https://www.linkedin.com/in/roberta-matera/) · [GitHub](https://github.com/RobertaMatera))
