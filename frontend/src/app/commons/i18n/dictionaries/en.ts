@@ -250,7 +250,8 @@ export const en = {
     },
     patientCard: {
       title: 'Patient',
-      history: 'Patient’s report history'
+      history: 'Patient’s report history',
+      historyCount: 'Patient’s report history ({count})'
     },
     details: {
       title: 'Details',

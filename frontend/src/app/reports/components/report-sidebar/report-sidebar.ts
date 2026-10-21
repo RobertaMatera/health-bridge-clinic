@@ -1,5 +1,8 @@
-import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, inject, input} from '@angular/core';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {RouterLink} from '@angular/router';
+import {catchError, of} from 'rxjs';
+import {ReportsService} from '@app/reports/services/reports-service';
 import {Report} from '@app/reports/models/report-model';
 import {reportTimeline} from '@app/reports/models/report-timeline';
 import {Avatar} from '@app/commons/ui/avatar/avatar';
@@ -24,7 +27,11 @@ import {fullName} from '@app/users/models/user-name';
         </div>
       </div>
       <a class="link mt-3.5 inline-flex min-h-11 items-center text-sm" routerLink="/reports" [queryParams]="{q: name(report().patient)}">
-        {{ 'reports.patientCard.history' | t }}
+        @if (historyCount(); as count) {
+          {{ 'reports.patientCard.historyCount' | t: {count: count} }}
+        } @else {
+          {{ 'reports.patientCard.history' | t }}
+        }
       </a>
     </section>
 
@@ -76,4 +83,17 @@ export class ReportSidebar {
   report = input.required<Report>();
   protected readonly name = fullName;
   protected readonly timeline = computed(() => reportTimeline(this.report()));
+
+  // Fetched once; the count is optional, so a failed request just hides it.
+  private readonly allReports = toSignal(
+    inject(ReportsService).getAll().pipe(catchError(() => of(null))),
+    {initialValue: null});
+
+  protected readonly historyCount = computed(() => {
+    const reports = this.allReports();
+    const patientId = this.report().patient.id;
+    return reports && patientId !== undefined
+      ? reports.filter(report => report.patient.id === patientId).length
+      : null;
+  });
 }

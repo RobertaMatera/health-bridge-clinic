@@ -249,7 +249,8 @@ export const it: Dictionary = {
     },
     patientCard: {
       title: 'Paziente',
-      history: 'Storico referti del paziente'
+      history: 'Storico referti del paziente',
+      historyCount: 'Storico referti del paziente ({count})'
     },
     details: {
       title: 'Dettagli',
