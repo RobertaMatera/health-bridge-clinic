@@ -15,10 +15,12 @@ stack and the layered architecture are unchanged.
 - **Doctor worklist**: greeting, KPI tiles, status filters with counts, search, sort, table on wide screens and
   cards on phones. Filtering is done on the client after a single request.
 - **Report editor**: status stepper, exam table with reference ranges and Low / High / Borderline / Normal
-  flags, a finalization checklist that explains why "Finalize" is blocked, a confirmation step, and a timeline.
+  flags, a finalization checklist that explains why "Finalize" is blocked, a confirmation step, a timeline,
+  and the patient's report count.
 - **Patient area**: plain-language status ("Ready" instead of "Finalized"), a summary headline, an explainer of
   how a report works and printable reports (PDF via the browser). Patients no longer see draft values.
-- **Statistics**: KPI tiles and accessible HTML/CSS charts replace the pie charts.
+- **Statistics**: KPI tiles and accessible HTML/CSS charts replace the pie charts, plus a note linking to
+  reports that have waited in "Created" for more than 2 days.
 - **Feedback**: toasts, skeleton loaders, empty and error states on every page.
 
 ### Internationalisation
@@ -45,7 +47,8 @@ stack and the layered architecture are unchanged.
 - **Consistent errors**: a `@RestControllerAdvice` returns `{status, code, message, path, fieldErrors}` with
   400/401/403/404/409 instead of 500 for every failure. Generic `RuntimeException`s became specific exceptions.
 - **Reference ranges**: `Exam` gained optional `refMin` / `refMax`; DTOs are validated with Bean Validation.
-- **Statistics**: average time to finalize, exam counts, out-of-range exams and reports per week.
+- **Statistics**: average time to finalize, exam counts, out-of-range exams, reports per week and reports
+  waiting in CREATED for more than 2 days.
 - **Demo data**: the seeder creates patients, doctors and reports in every state with realistic lab values.
 - **Fixes**: first and last names are no longer unique columns; the outcome column holds 2000 characters;
   services are transactional; the auditor lookup no longer fails on anonymous requests; Swagger UI declares
