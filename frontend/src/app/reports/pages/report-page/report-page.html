@@ -1,17 +1,34 @@
-@if (report(); as report) {
-  <div class="grid grid-cols-12">
-    <div class="col-span-12 mb-5 md:col-span-8">
-      <h1>
-        Dettaglio referto #{{ report.id }}
-        <app-report-status-badge
-          class="ms-3"
-          [status]="report.status"></app-report-status-badge>
-      </h1>
-      <app-report-details [report]="report" (change)="loadData()"></app-report-details>
+@switch (state()) {
+  @case ('loading') {
+    <div class="flex flex-col gap-6">
+      <div class="skeleton h-4 w-48"></div>
+      <div class="skeleton h-9 w-64"></div>
+      <section class="card p-5"><app-skeleton [rows]="4" [avatar]="false"/></section>
     </div>
-
-    <div class="col-span-12 md:col-span-4 md:ps-5">
-      <app-report-metadata [report]="report"></app-report-metadata>
-    </div>
-  </div>
+  }
+  @case ('notFound') {
+    <section class="card mx-auto mt-6 max-w-xl">
+      <app-empty-state icon="fa-file-circle-question" [heading]="'reports.editor.notFoundTitle' | t" [text]="'errors.REPORT_NOT_FOUND' | t">
+        <a routerLink="/reports" class="btn btn-primary btn-lg">{{ 'reports.editor.backToList' | t }}</a>
+      </app-empty-state>
+    </section>
+  }
+  @case ('error') {
+    <section class="card mx-auto mt-6 max-w-xl">
+      <app-empty-state icon="fa-triangle-exclamation" tone="error" [heading]="'errors.UNKNOWN' | t">
+        <button type="button" class="btn btn-secondary" (click)="load()">
+          <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>{{ 'common.retry' | t }}
+        </button>
+      </app-empty-state>
+    </section>
+  }
+  @default {
+    @if (report(); as report) {
+      @if (authService.isDoctor()) {
+        <app-report-editor [report]="report" (changed)="this.report.set($event)" (reload)="load()"/>
+      } @else {
+        <app-patient-report [report]="report" [printOnOpen]="printOnOpen"/>
+      }
+    }
+  }
 }

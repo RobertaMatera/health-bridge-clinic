@@ -1,33 +1,21 @@
-<!--
-  Layout principale centrato e con max-width per garantire leggibilità e coerenza visiva su schermi di diverse dimensioni (principio di responsività e gerarchia visiva).
-  L'uso di padding e spaziatura segue le best practice per la chiarezza e la separazione dei contenuti.
-  L'inclusione della navbar in alto favorisce la navigazione coerente (affordance e feedback).
-  Gli alert sono resi visibili con colori e icone per fornire feedback immediato all'utente (principio di feedback e contrasto, WCAG 2.1 AA).
--->
-<app-navbar></app-navbar>
+<a href="#main" class="skip-link" (click)="skipToContent($event)">{{ 'common.skipToContent' | t }}</a>
 
-<div class="mx-auto max-w-7xl px-6">
-  <router-outlet></router-outlet>
-</div>
-
-@if (alertsService.errorMessage(); as errorMessage) {
-  <!--
-    L'alert utilizza un backdrop e un'icona per garantire che il messaggio di errore sia ben visibile e accessibile.
-    Il contrasto tra testo e sfondo rispetta le linee guida WCAG per l'accessibilità.
-    Il pulsante di chiusura è grande e facilmente cliccabile (affordance).
-  -->
-  <div class="alert-backdrop">
-    <div class="error-message flex justify-between items-start gap-5">
-      <div class="flex items-center gap-2">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        <span>{{ errorMessage }}</span>
-      </div>
-
-      <span
-        class="cursor-pointer"
-        (click)="alertsService.clear()">
-      <i class="fa-solid fa-xmark"></i>
-    </span>
-    </div>
-  </div>
+@switch (layout()) {
+  @case ('doctor') {
+    <app-doctor-shell>
+      <router-outlet/>
+    </app-doctor-shell>
+  }
+  @case ('patient') {
+    <app-patient-shell>
+      <router-outlet/>
+    </app-patient-shell>
+  }
+  @default {
+    <main id="main" tabindex="-1" class="outline-none">
+      <router-outlet/>
+    </main>
+  }
 }
+
+<app-toast-outlet/>

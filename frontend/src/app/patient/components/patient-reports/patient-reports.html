@@ -1,0 +1,133 @@
+<div class="flex flex-col gap-7">
+  <div>
+    @if (authService.user(); as user) {
+      <h1 class="text-[28px] sm:text-[34px]">{{ 'patient.home.greeting' | t: {name: user.firstName} }}</h1>
+    }
+    <p class="mt-1.5 text-[17px] text-ink-soft">{{ 'patient.home.lead' | t }}</p>
+  </div>
+
+  @if (latestReady(); as report) {
+    <section class="flex flex-wrap items-center justify-between gap-4 rounded-card bg-brand-deep px-5 py-5 text-on-deep sm:px-[22px]" aria-labelledby="ready-banner-title">
+      <div class="flex items-center gap-3.5">
+        <span class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-deep-tile" aria-hidden="true">
+          <i class="fa-solid fa-check text-lg"></i>
+        </span>
+        <div>
+          <h2 id="ready-banner-title" class="text-lg">{{ 'patient.home.readyTitle' | t: {id: report.id} }}</h2>
+          <p class="text-[15px] text-on-deep-muted">
+            {{ 'patient.home.readyDetail' | t: {doctor: report.createdBy ? ('common.doctorName' | t: {name: name(report.createdBy)}) : '', date: (report.finalizedAt | localDate: 'dateLong')} }}
+          </p>
+        </div>
+      </div>
+      <a class="btn btn-lg bg-on-deep font-bold text-brand-deep hover:bg-white max-sm:w-full" [routerLink]="['/reports', report.id]">
+        {{ 'patient.home.openReport' | t }}
+      </a>
+    </section>
+  }
+
+  <section class="flex flex-col gap-3.5" aria-labelledby="my-reports-title">
+    <div class="flex items-baseline justify-between gap-3">
+      <h2 id="my-reports-title" class="text-[22px]">{{ 'patient.home.listTitle' | t }}</h2>
+      @if (state() === 'ready') {
+        <span class="text-[15px] text-muted">{{ 'patient.home.count' | t: {count: reports().length} }}</span>
+      }
+    </div>
+
+    @switch (state()) {
+      @case ('loading') {
+        <div class="card p-5"><app-skeleton [rows]="2" [avatar]="false"/></div>
+      }
+      @case ('error') {
+        <div class="card">
+          <app-empty-state icon="fa-triangle-exclamation" tone="error" [heading]="'patient.home.loadError' | t">
+            <button type="button" class="btn btn-secondary" (click)="load()">
+              <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>{{ 'common.retry' | t }}
+            </button>
+          </app-empty-state>
+        </div>
+      }
+      @default {
+        @for (report of sortedReports(); track report.id) {
+          <article class="card flex flex-wrap items-center justify-between gap-5 p-5 sm:p-[22px]" [attr.aria-labelledby]="'report-card-' + report.id">
+            <div class="flex min-w-0 flex-col gap-2">
+              <div class="flex flex-wrap items-center gap-3">
+                <h3 [id]="'report-card-' + report.id" class="card-title">{{ 'patient.home.cardTitle' | t: {id: report.id} }}</h3>
+                <app-report-status-badge [status]="report.status" audience="patient"/>
+              </div>
+              @if (report.status === finalized) {
+                <p class="text-[15px] text-ink-soft">
+                  {{ 'patient.home.metaFinal' | t: {
+                    exams: ('reports.list.exams' | t: {count: report.exams.length}),
+                    doctor: report.createdBy ? ('common.doctorName' | t: {name: name(report.createdBy)}) : '',
+                    date: (report.finalizedAt | localDate: 'dateLong')
+                  } }}
+                </p>
+                @if (outOfRange(report.exams); as count) {
+                  <p class="text-[15px] font-semibold text-danger">
+                    <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+                    {{ 'patient.home.toDiscuss' | t: {count: count} }}
+                  </p>
+                } @else {
+                  <p class="text-[15px] font-semibold text-final">
+                    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+                    {{ 'patient.home.allInRange' | t }}
+                  </p>
+                }
+              } @else {
+                <p class="text-[15px] text-ink-soft">
+                  {{ 'patient.home.metaOpen' | t: {
+                    doctor: report.createdBy ? ('common.doctorName' | t: {name: name(report.createdBy)}) : '',
+                    date: (report.createdAt | localDate: 'dateLong')
+                  } }}
+                </p>
+                <p class="text-[15px] text-ink-soft">{{ 'patient.home.pendingText' | t }}</p>
+              }
+            </div>
+            <div class="flex flex-wrap gap-2 max-sm:w-full max-sm:[&>*]:flex-1">
+              @if (report.status === finalized) {
+                <a class="btn btn-secondary btn-lg" [routerLink]="['/reports', report.id]" [queryParams]="{print: 1}">
+                  <i class="fa-solid fa-download" aria-hidden="true"></i>{{ 'patient.home.download' | t }}
+                </a>
+                <a class="btn btn-primary btn-lg" [routerLink]="['/reports', report.id]" [attr.aria-label]="'patient.home.openAria' | t: {id: report.id}">
+                  {{ 'patient.home.open' | t }}
+                </a>
+              } @else {
+                <a class="btn btn-secondary btn-lg" [routerLink]="['/reports', report.id]">{{ 'patient.home.viewStatus' | t }}</a>
+              }
+            </div>
+          </article>
+        } @empty {
+          <div class="card">
+            <app-empty-state [heading]="'patient.home.emptyTitle' | t" [text]="'patient.home.emptyText' | t"/>
+          </div>
+        }
+      }
+    }
+  </section>
+
+  <section class="card p-5 sm:p-[22px]" aria-labelledby="how-title">
+    <h2 id="how-title" class="card-title mb-4.5">{{ 'patient.how.title' | t }}</h2>
+    <ol class="grid gap-5 sm:grid-cols-3">
+      @for (step of steps; track step.title; let i = $index) {
+        <li class="flex items-start gap-3">
+          <span class="flex size-8 shrink-0 items-center justify-center rounded-full text-sm font-bold" [class]="step.tone" aria-hidden="true">{{ i + 1 }}</span>
+          <div>
+            <p class="font-bold">{{ step.title | t }}</p>
+            <p class="mt-0.5 text-[15px] text-ink-soft">{{ step.text | t }}</p>
+          </div>
+        </li>
+      }
+    </ol>
+  </section>
+
+  <section class="flex flex-wrap items-center justify-between gap-4 rounded-card border border-dashed border-placeholder px-5 py-5 sm:px-[22px]" aria-labelledby="help-title">
+    <div>
+      <h2 id="help-title" class="text-[17px]">{{ 'patient.help.title' | t }}</h2>
+      <p class="mt-0.5 text-[15px] text-ink-soft">{{ 'patient.help.text' | t }}</p>
+    </div>
+    <div class="flex flex-wrap gap-2 max-sm:w-full max-sm:[&>*]:flex-1">
+      <a class="btn btn-secondary btn-lg" [href]="officeEmail">{{ 'patient.help.contact' | t }}</a>
+      <a class="btn btn-primary btn-lg" [href]="bookingEmail">{{ 'patient.help.book' | t }}</a>
+    </div>
+  </section>
+</div>

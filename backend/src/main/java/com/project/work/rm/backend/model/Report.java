@@ -43,6 +43,7 @@ public class Report {
     @Enumerated(EnumType.STRING)
     private ReportStatus status;
 
+    @Column(length = 2000)
     private String outcome;
 
     @CreatedBy

@@ -1,0 +1,211 @@
+<div class="flex flex-col gap-6 sm:gap-7">
+  <header class="flex flex-wrap items-end justify-between gap-4">
+    <div>
+      <p class="eyebrow first-letter:uppercase">{{ today | localDate: 'weekdayLong' }}</p>
+      @if (authService.user(); as user) {
+        <h1 class="mt-1 text-2xl sm:text-[32px]">
+          <span class="sm:hidden">{{ 'reports.list.title' | t }}</span>
+          <span class="max-sm:hidden">{{ greetingKey() | t: {name: ('common.doctorName' | t: {name: user.lastName})} }}</span>
+        </h1>
+      }
+    </div>
+    <button type="button" class="btn btn-primary btn-lg max-md:hidden" (click)="showCreateDialog.set(true)">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>{{ 'reports.list.newReport' | t }}
+    </button>
+  </header>
+
+  <section class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-4" [attr.aria-label]="'reports.list.summary' | t">
+    <div class="card rounded-xl p-3 sm:rounded-[14px] sm:p-5">
+      <p class="text-[13px] font-medium text-muted sm:text-sm">{{ 'reports.list.kpiToComplete' | t }}</p>
+      <p class="mt-1 flex flex-wrap items-baseline gap-x-2">
+        <span class="text-[26px] font-bold sm:text-4xl">{{ state() === 'ready' ? counts().CREATED + counts().IN_PROGRESS : '–' }}</span>
+        <span class="text-sm text-muted max-sm:hidden">{{ 'reports.list.kpiToCompleteDetail' | t: {created: counts().CREATED, progress: counts().IN_PROGRESS} }}</span>
+      </p>
+    </div>
+    <div class="card rounded-[14px] p-5 max-sm:hidden">
+      <p class="text-sm font-medium text-muted">{{ 'reports.list.kpiFinalizedWeek' | t }}</p>
+      <p class="mt-1 flex flex-wrap items-baseline gap-x-2">
+        <span class="text-4xl font-bold">{{ state() === 'ready' ? finalizedThisWeek() : '–' }}</span>
+        <span class="text-sm text-muted">{{ 'reports.list.kpiFinalizedWeekDetail' | t }}</span>
+      </p>
+    </div>
+    <div class="rounded-xl border border-danger-line bg-danger-tint p-3 text-danger sm:rounded-[14px] sm:p-5">
+      <p class="text-[13px] font-semibold sm:text-sm">
+        <span class="sm:hidden">{{ 'reports.list.kpiOutOfRangeShort' | t }}</span>
+        <span class="max-sm:hidden">{{ 'reports.list.kpiOutOfRange' | t }}</span>
+      </p>
+      <p class="mt-1 flex flex-wrap items-baseline gap-x-2">
+        <span class="text-[26px] font-bold sm:text-4xl">{{ state() === 'ready' ? toReview().values : '–' }}</span>
+        <span class="text-sm max-sm:hidden">{{ 'reports.list.kpiOutOfRangeDetail' | t: {count: toReview().reports} }}</span>
+      </p>
+    </div>
+  </section>
+
+  <section class="sm:overflow-hidden sm:rounded-card sm:border sm:border-line sm:bg-surface" aria-labelledby="reports-list-heading">
+    <h2 id="reports-list-heading" class="sr-only">{{ 'reports.list.title' | t }}</h2>
+
+    <div class="flex flex-col gap-3 pb-3.5 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:p-4">
+      <div class="tabs order-2 sm:order-1" role="group" [attr.aria-label]="'reports.list.filterLabel' | t">
+        <button type="button" class="tab" [attr.aria-pressed]="statusFilter() === 'ALL'" (click)="statusFilter.set('ALL')">
+          {{ 'reports.list.all' | t }} <span class="tab-count">{{ counts().ALL }}</span>
+        </button>
+        @for (status of statuses; track status) {
+          <button type="button" class="tab" [attr.aria-pressed]="statusFilter() === status" (click)="statusFilter.set(status)">
+            {{ filterKey(status) | t }} <span class="tab-count">{{ counts()[status] }}</span>
+          </button>
+        }
+      </div>
+
+      <div class="order-1 flex flex-wrap gap-2 sm:order-2">
+        <div class="relative w-full sm:w-72">
+          <label for="reports-search" class="sr-only">{{ 'reports.list.searchLabel' | t }}</label>
+          <i class="fa-solid fa-magnifying-glass pointer-events-none absolute top-1/2 left-3.5 -translate-y-1/2 text-muted" aria-hidden="true"></i>
+          <input
+            id="reports-search"
+            type="search"
+            class="input min-h-11 pl-10 text-[15px] max-sm:text-base"
+            autocomplete="off"
+            [placeholder]="'reports.list.searchPlaceholder' | t"
+            [value]="query()"
+            (input)="setQuery($event)">
+        </div>
+        <div class="max-sm:hidden">
+          <label for="reports-sort" class="sr-only">{{ 'reports.list.sortLabel' | t }}</label>
+          <select id="reports-sort" class="input min-h-11 text-[15px] font-semibold" (change)="setSort($event)">
+            <option value="newest" [selected]="sort() === 'newest'">{{ 'reports.list.sortNewest' | t }}</option>
+            <option value="oldest" [selected]="sort() === 'oldest'">{{ 'reports.list.sortOldest' | t }}</option>
+            <option value="patient" [selected]="sort() === 'patient'">{{ 'reports.list.sortPatient' | t }}</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    @switch (state()) {
+      @case ('loading') {
+        <div class="card p-4 sm:rounded-none sm:border-0 sm:border-t sm:border-line">
+          <app-skeleton [rows]="5"/>
+        </div>
+      }
+      @case ('error') {
+        <div class="card sm:rounded-none sm:border-0 sm:border-t sm:border-line">
+          <app-empty-state icon="fa-triangle-exclamation" tone="error" [heading]="'reports.list.loadError' | t">
+            <button type="button" class="btn btn-secondary" (click)="load()">
+              <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>{{ 'common.retry' | t }}
+            </button>
+          </app-empty-state>
+        </div>
+      }
+      @default {
+        @if (visibleReports().length === 0) {
+          <div class="card sm:rounded-none sm:border-0 sm:border-t sm:border-line">
+            @if (hasFilters()) {
+              <app-empty-state icon="fa-magnifying-glass" [heading]="'reports.list.noResultsTitle' | t" [text]="'reports.list.noResultsText' | t">
+                <button type="button" class="btn btn-secondary" (click)="clearFilters()">{{ 'reports.list.clearFilters' | t }}</button>
+              </app-empty-state>
+            } @else {
+              <app-empty-state [heading]="'reports.list.emptyTitle' | t" [text]="'reports.list.emptyText' | t">
+                <button type="button" class="btn btn-primary" (click)="showCreateDialog.set(true)">
+                  <i class="fa-solid fa-plus" aria-hidden="true"></i>{{ 'reports.list.newReport' | t }}
+                </button>
+              </app-empty-state>
+            }
+          </div>
+        } @else {
+          <!-- md and up: table -->
+          <div class="overflow-x-auto max-md:hidden">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th scope="col" class="w-20">{{ 'reports.list.colNumber' | t }}</th>
+                  <th scope="col">{{ 'reports.list.colPatient' | t }}</th>
+                  <th scope="col">{{ 'reports.list.colStatus' | t }}</th>
+                  <th scope="col">{{ 'reports.list.colExams' | t }}</th>
+                  <th scope="col">{{ 'reports.list.colUpdated' | t }}</th>
+                  <th scope="col" class="w-14"><span class="sr-only">{{ 'reports.list.colActions' | t }}</span></th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (report of visibleReports(); track report.id) {
+                  <tr class="relative hover:bg-subtle">
+                    <td class="font-mono text-muted">#{{ report.id }}</td>
+                    <td>
+                      <div class="flex items-center gap-3">
+                        <app-avatar [firstName]="report.patient.firstName" [lastName]="report.patient.lastName" size="sm"/>
+                        <div class="min-w-0">
+                          <div class="font-semibold">{{ name(report.patient) }}</div>
+                          <div class="truncate text-[13px] text-muted">{{ report.patient.email }}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td><app-report-status-badge [status]="report.status" size="sm"/></td>
+                    <td>
+                      <div class="flex items-center gap-2">
+                        <span class="font-mono tabular-nums">{{ report.exams.length }}</span>
+                        @if (outOfRange(report.exams); as outCount) {
+                          <span class="flag flag-out">{{ 'reports.list.outOfRange' | t: {count: outCount} }}</span>
+                        }
+                      </div>
+                    </td>
+                    <td class="whitespace-nowrap text-ink-soft">{{ updatedLabel(report.updatedAt) }}</td>
+                    <td>
+                      <!-- The link's ::after stretches over the row, so the whole row is clickable. -->
+                      <a
+                        class="btn-icon after:absolute after:inset-0 after:content-['']"
+                        [routerLink]="['/reports', report.id]"
+                        [attr.aria-label]="'reports.list.open' | t: {id: report.id}">
+                        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+                      </a>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <!-- below md: cards -->
+          <ul class="flex flex-col gap-2.5 md:hidden">
+            @for (report of visibleReports(); track report.id) {
+              <li>
+                <a
+                  class="flex items-center gap-3 rounded-[14px] border border-line bg-surface p-3.5 text-ink no-underline hover:bg-subtle"
+                  [routerLink]="['/reports', report.id]">
+                  <app-avatar [firstName]="report.patient.firstName" [lastName]="report.patient.lastName"/>
+                  <span class="flex min-w-0 flex-1 flex-col gap-1.5">
+                    <span class="flex justify-between gap-2">
+                      <span class="truncate text-[15px] font-bold">{{ name(report.patient) }}</span>
+                      <span class="font-mono text-[13px] text-muted">#{{ report.id }}</span>
+                    </span>
+                    <span class="flex flex-wrap items-center gap-2">
+                      <app-report-status-badge [status]="report.status" size="sm"/>
+                      <span class="text-[13px] text-muted">{{ 'reports.list.exams' | t: {count: report.exams.length} }} · {{ updatedLabel(report.updatedAt) }}</span>
+                      @if (outOfRange(report.exams); as outCount) {
+                        <span class="flag flag-out">{{ 'reports.list.outOfRange' | t: {count: outCount} }}</span>
+                      }
+                    </span>
+                  </span>
+                </a>
+              </li>
+            }
+          </ul>
+        }
+
+        <p class="px-1 pt-3.5 text-sm text-muted sm:border-t sm:border-line-soft sm:px-4 sm:py-3.5" aria-live="polite">
+          {{ 'reports.list.total' | t: {count: visibleReports().length} }}
+        </p>
+      }
+    }
+  </section>
+</div>
+
+<button
+  type="button"
+  class="btn btn-primary fixed right-4 bottom-6 z-30 min-h-14 rounded-card px-5 text-base shadow-[0_6px_18px_rgb(11_79_92/0.3)] md:hidden"
+  (click)="showCreateDialog.set(true)">
+  <i class="fa-solid fa-plus text-lg" aria-hidden="true"></i>
+  <span aria-hidden="true">{{ 'reports.list.newShort' | t }}</span>
+  <span class="sr-only">{{ 'reports.list.newReport' | t }}</span>
+</button>
+
+@if (showCreateDialog()) {
+  <app-new-report-dialog (created)="onCreated($event)" (dismiss)="showCreateDialog.set(false)"/>
+}

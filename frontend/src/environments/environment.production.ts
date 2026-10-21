@@ -1,4 +1,5 @@
 export const environment = {
   backendUrl: 'http://localhost:8080',
-  production: true
+  production: true,
+  showDemoAccounts: false
 };

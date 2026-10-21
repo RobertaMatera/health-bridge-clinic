@@ -1,0 +1,50 @@
+<ol class="card grid gap-4 px-5 py-4 sm:grid-cols-3 sm:gap-3" [attr.aria-label]="'reports.stepper.label' | t">
+  <ng-template #marker let-index="index">
+    @if (step() > index || step() === 3) {
+      <span class="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand text-white">
+        <i class="fa-solid fa-check text-sm" aria-hidden="true"></i>
+        <span class="sr-only">{{ 'reports.stepper.done' | t }}</span>
+      </span>
+    } @else if (step() === index) {
+      <span class="flex size-8 shrink-0 items-center justify-center rounded-full border-[3px] border-brand bg-brand-soft text-sm font-bold text-brand-hover">
+        {{ index }}<span class="sr-only">, {{ 'reports.stepper.current' | t }}</span>
+      </span>
+    } @else {
+      <span class="flex size-8 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-placeholder text-sm font-bold text-muted">{{ index }}</span>
+    }
+  </ng-template>
+
+  <li class="flex items-center gap-3" [attr.aria-current]="step() === 1 ? 'step' : null">
+    <ng-container *ngTemplateOutlet="marker; context: {index: 1}"/>
+    <div>
+      <p class="text-[15px] font-bold">{{ 'reports.stepper.created' | t }}</p>
+      <p class="text-[13px] text-muted">{{ report().createdAt | localDate }}</p>
+    </div>
+  </li>
+  <li class="flex items-center gap-3" [attr.aria-current]="step() === 2 ? 'step' : null">
+    <ng-container *ngTemplateOutlet="marker; context: {index: 2}"/>
+    <div>
+      <p class="text-[15px] font-bold" [class.text-ink-soft]="step() < 2">{{ 'reports.stepper.progress' | t }}</p>
+      <p class="text-[13px] text-muted">
+        @if (report().exams.length) {
+          {{ 'reports.stepper.progressDetail' | t: {count: report().exams.length} }}
+        } @else {
+          {{ 'reports.stepper.progressWaiting' | t }}
+        }
+      </p>
+    </div>
+  </li>
+  <li class="flex items-center gap-3" [attr.aria-current]="step() === 3 ? 'step' : null">
+    <ng-container *ngTemplateOutlet="marker; context: {index: 3}"/>
+    <div>
+      <p class="text-[15px] font-bold" [class.text-ink-soft]="step() < 3">{{ 'reports.stepper.final' | t }}</p>
+      <p class="text-[13px] text-muted">
+        @if (report().finalizedAt) {
+          {{ report().finalizedAt | localDate }}
+        } @else {
+          {{ 'reports.stepper.finalPending' | t }}
+        }
+      </p>
+    </div>
+  </li>
+</ol>

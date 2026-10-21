@@ -23,6 +23,8 @@ public class AuthService
                 .map(SecurityContext::getAuthentication)
                 .filter(Authentication::isAuthenticated)
                 .map(Authentication::getPrincipal)
+                // Anonymous requests carry a String principal, not a User.
+                .filter(User.class::isInstance)
                 .map(User.class::cast);
     }
 
