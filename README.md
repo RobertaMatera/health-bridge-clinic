@@ -73,7 +73,7 @@ cd frontend && npm run build
 ### Database
 
 H2 runs in file mode (`backend/projectworkmrdb.mv.db`). On an **empty** database the seeder creates the demo
-accounts and eight reports in every state, with timestamps spread over the last weeks.
+accounts and 20 reports in every state, with timestamps spread over the last weeks.
 To start again from the demo data, stop the backend and delete the database file:
 
 ```bash

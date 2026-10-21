@@ -91,6 +91,70 @@ public class DatabaseSeeder implements ApplicationRunner {
         report(spagnoli, poi, ReportStatus.CREATED, Duration.ofDays(2), null, null);
 
         report(greco, poi, ReportStatus.CREATED, Duration.ofHours(3), null, null);
+
+        // More history for both doctors, so every week of the statistics chart has data.
+        report(greco, rossi, ReportStatus.FINALIZED, Duration.ofDays(41), Duration.ofDays(39),
+                "Anemia da carenza di ferro. Prescrivo un integratore di ferro per 3 mesi e un controllo dell'emocromo tra 4 settimane.",
+                new SeedExam("Emoglobina", "g/dL", 11.4f, 12f, 16f),
+                new SeedExam("Ferritina", "ng/mL", 12f, 15f, 150f),
+                new SeedExam("Sideremia", "µg/dL", 48f, 50f, 170f));
+
+        report(colombo, rossi, ReportStatus.FINALIZED, Duration.ofDays(39), Duration.ofDays(35),
+                "Funzione tiroidea nella norma, con TSH vicino al limite superiore. Ripeteremo il controllo tra 6 mesi.",
+                new SeedExam("TSH", "mIU/L", 3.9f, 0.4f, 4f),
+                new SeedExam("FT4", "ng/dL", 1.2f, 0.9f, 1.7f));
+
+        report(massari, poi, ReportStatus.FINALIZED, Duration.ofDays(34), Duration.ofDays(31),
+                "Lieve aumento delle transaminasi (ALT). Consiglio di ridurre alcol e cibi grassi e di ripetere gli esami tra 2 mesi.",
+                new SeedExam("AST", "U/L", 28f, 10f, 40f),
+                new SeedExam("ALT", "U/L", 61f, 7f, 56f),
+                new SeedExam("Gamma GT", "U/L", 48f, 8f, 61f),
+                new SeedExam("Bilirubina totale", "mg/dL", 0.9f, 0.3f, 1.2f));
+
+        report(bianchi, poi, ReportStatus.FINALIZED, Duration.ofDays(30), Duration.ofDays(28),
+                "Colesterolo e trigliceridi elevati. Iniziamo con dieta e attività fisica; valuteremo una terapia al prossimo controllo tra 3 mesi.",
+                new SeedExam("Colesterolo totale", "mg/dL", 232f, null, 200f),
+                new SeedExam("Colesterolo LDL", "mg/dL", 158f, null, 100f),
+                new SeedExam("Colesterolo HDL", "mg/dL", 44f, 40f, null),
+                new SeedExam("Trigliceridi", "mg/dL", 175f, null, 150f));
+
+        report(ferri, rossi, ReportStatus.FINALIZED, Duration.ofDays(25), Duration.ofDays(24),
+                "Acido urico lievemente alto, funzione renale nella norma. Bere almeno 2 litri d'acqua al giorno e limitare carni rosse e alcol.",
+                new SeedExam("Creatinina", "mg/dL", 1.1f, 0.7f, 1.3f),
+                new SeedExam("Azotemia", "mg/dL", 38f, 10f, 50f),
+                new SeedExam("Acido urico", "mg/dL", 7.4f, 3.4f, 7f),
+                new SeedExam("Sodio", "mmol/L", 140f, 135f, 145f),
+                new SeedExam("Potassio", "mmol/L", 4.3f, 3.5f, 5.1f));
+
+        report(spagnoli, poi, ReportStatus.FINALIZED, Duration.ofDays(22), Duration.ofDays(20),
+                "Nessun segno di infiammazione. Emocromo nella norma.",
+                new SeedExam("Proteina C reattiva", "mg/dL", 0.3f, null, 0.5f),
+                new SeedExam("VES", "mm/h", 18f, null, 20f),
+                new SeedExam("Emoglobina", "g/dL", 13.1f, 12f, 16f));
+
+        report(greco, rossi, ReportStatus.FINALIZED, Duration.ofDays(13), Duration.ofDays(11),
+                "L'emoglobina è tornata nella norma e le scorte di ferro stanno migliorando. Proseguire l'integratore per un altro mese.",
+                new SeedExam("Emoglobina", "g/dL", 12.6f, 12f, 16f),
+                new SeedExam("Ferritina", "ng/mL", 28f, 15f, 150f));
+
+        report(colombo, rossi, ReportStatus.FINALIZED, Duration.ofDays(9), Duration.ofDays(6),
+                "Metabolismo degli zuccheri nella norma; glicemia vicina al limite. Mantenere uno stile di vita attivo.",
+                new SeedExam("Glicemia a digiuno", "mg/dL", 96f, 70f, 99f),
+                new SeedExam("Emoglobina glicata", "%", 5.4f, 4f, 5.7f),
+                new SeedExam("Insulina", "µU/mL", 9f, 2.6f, 24.9f));
+
+        report(ferri, poi, ReportStatus.IN_PROGRESS, Duration.ofDays(8), null, null,
+                new SeedExam("PSA totale", "ng/mL", 3.2f, null, 4f),
+                new SeedExam("Creatinina", "mg/dL", 1.0f, 0.7f, 1.3f));
+
+        report(bianchi, rossi, ReportStatus.IN_PROGRESS, Duration.ofDays(4), null, null,
+                new SeedExam("Vitamina D (25-OH)", "ng/mL", 26f, 30f, 100f),
+                new SeedExam("Calcio", "mg/dL", 9.5f, 8.6f, 10.2f));
+
+        // Waiting for more than 2 days: shows up in the statistics hint.
+        report(colombo, rossi, ReportStatus.CREATED, Duration.ofDays(4), null, null);
+
+        report(bianchi, poi, ReportStatus.CREATED, Duration.ofDays(1), null, null);
     }
 
     private User user(String firstName, String lastName, String email, String password, UserRole role) {
