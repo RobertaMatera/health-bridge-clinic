@@ -22,6 +22,9 @@ stack and the layered architecture are unchanged.
 - **Statistics**: KPI tiles and accessible HTML/CSS charts replace the pie charts, plus a note linking to
   reports that have waited in "Created" for more than 2 days.
 - **Feedback**: toasts, skeleton loaders, empty and error states on every page.
+- **Loading and motion**: a branded splash while the app boots, a top loading bar for slow navigations
+  and requests (shown only after 200 ms), spinners on busy buttons, and short page cross-fades and
+  content fade-ins. All motion is turned off with the "reduce motion" system setting.
 
 ### Internationalisation
 
