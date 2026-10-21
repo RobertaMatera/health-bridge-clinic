@@ -8,6 +8,7 @@ import {ReportEditor} from '@app/reports/components/report-editor/report-editor'
 import {PatientReport} from '@app/patient/components/patient-report/patient-report';
 import {AuthService} from '@app/auth/services/auth-service';
 import {EmptyState} from '@app/commons/ui/empty-state/empty-state';
+import {StatusPage} from '@app/commons/ui/status-page/status-page';
 import {Skeleton} from '@app/commons/ui/skeleton/skeleton';
 import {TranslatePipe} from '@app/commons/i18n/translate-pipe';
 
@@ -15,7 +16,7 @@ type LoadState = 'loading' | 'ready' | 'notFound' | 'error';
 
 @Component({
   selector: 'app-report-page',
-  imports: [ReportEditor, PatientReport, EmptyState, Skeleton, RouterLink, TranslatePipe],
+  imports: [ReportEditor, PatientReport, EmptyState, StatusPage, Skeleton, RouterLink, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './report-page.html'
 })

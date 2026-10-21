@@ -32,7 +32,7 @@
     }
     @default {
       @if (analytics(); as a) {
-        <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" [attr.aria-label]="'analytics.indicators' | t">
+        <section class="fade-in grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" [attr.aria-label]="'analytics.indicators' | t">
           <div class="card p-[22px]">
             <p class="text-sm font-medium text-muted">{{ 'analytics.totalReports' | t }}</p>
             <p class="kpi-value">{{ a.totalReports | localNumber }}</p>
@@ -62,7 +62,7 @@
           </div>
         </section>
 
-        <div class="grid gap-4 lg:grid-cols-2">
+        <div class="fade-in grid gap-4 lg:grid-cols-2">
           <section class="card flex flex-col gap-5 p-5 sm:p-[22px]" aria-labelledby="weekly-title">
             <div>
               <h2 id="weekly-title" class="card-title">{{ 'analytics.weeklyTitle' | t }}</h2>
@@ -128,7 +128,7 @@
           </section>
         </div>
 
-        <section class="card flex flex-col gap-4.5 p-5 sm:p-[22px]" aria-labelledby="split-title">
+        <section class="fade-in card flex flex-col gap-4.5 p-5 sm:p-[22px]" aria-labelledby="split-title">
           <div>
             <h2 id="split-title" class="card-title">{{ 'analytics.splitTitle' | t }}</h2>
             <p class="mt-0.5 text-sm text-muted">{{ 'analytics.splitSubtitle' | t }}</p>

@@ -4,8 +4,34 @@ A full-stack web application for a private clinic: a digital **bridge between do
 Doctors create medical reports, record lab exams and write an outcome; once a report is finalized it
 becomes read-only and the patient can read it (and save it as PDF). Doctors also see clinic statistics.
 
-This repository is an improved version of my BSc thesis project (L-31, Pegaso University).
-Original thesis repository: _link to be added_.
+## Project background
+
+Health Bridge Clinic started as my BSc thesis project in Information Technology for Digital
+Enterprises (Pegaso Digital University, 2026). The original version, as submitted, is preserved
+here: [rm-project-work-16](https://github.com/RobertaMatera/rm-project-work-16).
+
+This repository continues that work. The purpose, functional requirements and tech stack are
+unchanged; the focus of this version is a redesigned user experience, a consistent design system,
+full responsiveness and English/Italian localisation.
+
+## How I used AI
+
+I used AI (Claude) as a design and development assistant throughout this project.
+I remained responsible for every decision and for the final code.
+
+**My role**
+- Defined the product goals, user roles and functional requirements
+- Made the main UX, design-system and architecture decisions
+- Reviewed, tested and integrated every change before committing it
+
+**Where AI helped**
+- **Design system & UX:** exploring and refining colour tokens, typography, accessibility
+  (WCAG 2.1 AA) and layouts, starting from my original design
+- **Code refinement:** suggesting improvements to my code and catching issues
+- **Learning:** explaining concepts and best practices as I worked
+- **Git workflow:** help with commands, history management and commit structure
+
+Commits created with AI assistance carry a `Co-Authored-By` trailer.
 
 ![Doctor's reports list](docs/screenshots/02-doctor-reports.png)
 
@@ -73,7 +99,7 @@ cd frontend && npm run build
 ### Database
 
 H2 runs in file mode (`backend/projectworkmrdb.mv.db`). On an **empty** database the seeder creates the demo
-accounts and eight reports in every state, with timestamps spread over the last weeks.
+accounts and 20 reports in every state, with timestamps spread over the last weeks.
 To start again from the demo data, stop the backend and delete the database file:
 
 ```bash

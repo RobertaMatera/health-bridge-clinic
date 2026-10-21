@@ -47,7 +47,7 @@ import {errorMessageKey} from '@app/commons/errors/error-message';
 
       <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
         <button type="button" class="btn btn-secondary btn-lg" (click)="cancel.emit()">{{ 'common.cancel' | t }}</button>
-        <button type="submit" class="btn btn-primary btn-lg" [disabled]="submitting()">
+        <button type="submit" class="btn btn-primary btn-lg" [disabled]="submitting()" [attr.aria-busy]="submitting() || null">
           <i class="fa-solid fa-plus" aria-hidden="true"></i>{{ 'reports.create.submit' | t }}
         </button>
       </div>

@@ -81,6 +81,19 @@ export const it: Dictionary = {
   toast: {
     dismiss: 'Chiudi notifica'
   },
+  statusPages: {
+    home: 'Torna ai miei referti',
+    login: 'Vai all’accesso',
+    notFound: {
+      title: 'Pagina non trovata',
+      text: 'L’indirizzo potrebbe essere errato, oppure la pagina è stata spostata o rimossa.'
+    },
+    error: {
+      title: 'Qualcosa è andato storto',
+      text: 'Non è stato possibile caricare la pagina. Controlla la connessione e riprova. Se il problema persiste, contatta la segreteria della clinica.',
+      retry: 'Riprova'
+    }
+  },
   auth: {
     brand: {
       headline: 'Il ponte digitale tra medico e paziente.',
