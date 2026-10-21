@@ -5,11 +5,12 @@ import {UserRole} from '@app/users/models/user-role-enum';
 import {DoctorShell} from '@app/commons/layout/doctor-shell/doctor-shell';
 import {PatientShell} from '@app/commons/layout/patient-shell/patient-shell';
 import {ToastOutlet} from '@app/commons/ui/toast/toast-outlet';
+import {LoadingBar} from '@app/commons/ui/loading-bar/loading-bar';
 import {TranslatePipe} from '@app/commons/i18n/translate-pipe';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, DoctorShell, PatientShell, ToastOutlet, TranslatePipe],
+  imports: [RouterOutlet, DoctorShell, PatientShell, ToastOutlet, LoadingBar, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html'
 })

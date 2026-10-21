@@ -105,7 +105,7 @@
             <span id="outcome-counter" class="font-mono tabular-nums">{{ 'reports.outcome.counter' | t: {count: outcome().length, max: outcomeMax} }}</span>
           </div>
           <div class="flex justify-end max-md:hidden">
-            <button type="button" class="btn btn-secondary" [disabled]="!dirty() || savingOutcome()" (click)="saveOutcome()">
+            <button type="button" class="btn btn-secondary" [disabled]="!dirty() || savingOutcome()" [attr.aria-busy]="savingOutcome() || null" (click)="saveOutcome()">
               <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>{{ 'reports.outcome.save' | t }}
             </button>
           </div>
@@ -133,7 +133,7 @@
       </p>
     }
     <div class="grid grid-cols-2 gap-2">
-      <button type="button" class="btn btn-secondary btn-lg" [disabled]="!dirty() || savingOutcome()" (click)="saveOutcome()">
+      <button type="button" class="btn btn-secondary btn-lg" [disabled]="!dirty() || savingOutcome()" [attr.aria-busy]="savingOutcome() || null" (click)="saveOutcome()">
         {{ 'common.save' | t }}
       </button>
       <button

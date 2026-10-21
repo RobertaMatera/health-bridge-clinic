@@ -3,6 +3,9 @@ import {authenticatedGuard} from './auth/guards/authenticated-guard';
 import {roleGuard} from './auth/guards/role-guard';
 import {guestGuard} from './auth/guards/guest-guard';
 import {UserRole} from './users/models/user-role-enum';
+// Eager on purpose: they must still render when lazy chunks cannot be fetched.
+import {ErrorPage} from './commons/pages/error-page/error-page';
+import {NotFoundPage} from './commons/pages/not-found-page/not-found-page';
 
 export const routes: Routes = [{
   path: '',
@@ -41,6 +44,9 @@ export const routes: Routes = [{
   path: 'unauthorized',
   loadComponent: () => import('./auth/pages/unauthorized-page/unauthorized-page').then(m => m.UnauthorizedPage)
 }, {
+  path: 'error',
+  component: ErrorPage
+}, {
   path: '**',
-  redirectTo: 'reports'
+  component: NotFoundPage
 }];
