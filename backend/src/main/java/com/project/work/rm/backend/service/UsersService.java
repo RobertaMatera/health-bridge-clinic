@@ -5,6 +5,7 @@ import com.project.work.rm.backend.dto.UserDTO;
 import com.project.work.rm.backend.enums.UserRole;
 import com.project.work.rm.backend.mapper.UsersMapper;
 import com.project.work.rm.backend.repository.UsersRepository;
+import com.project.work.rm.backend.exception.InvalidCredentialsException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,7 +40,7 @@ public class UsersService {
             return usersMapper.toDTO(user.get());
         }
 
-        throw new RuntimeException("Invalid username or password");
+        throw new InvalidCredentialsException();
     }
 
     public List<UserDTO> getUsersByRole(UserRole role) {

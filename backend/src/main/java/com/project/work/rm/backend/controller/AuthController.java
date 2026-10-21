@@ -3,6 +3,7 @@ package com.project.work.rm.backend.controller;
 import com.project.work.rm.backend.dto.LoginDTO;
 import com.project.work.rm.backend.dto.UserDTO;
 import com.project.work.rm.backend.service.UsersService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +17,7 @@ public class AuthController {
     private final UsersService usersService;
 
     @PostMapping("/login")
-    public UserDTO login(@RequestBody final LoginDTO loginDTO) {
+    public UserDTO login(@Valid @RequestBody final LoginDTO loginDTO) {
         return usersService.login(loginDTO);
     }
 }

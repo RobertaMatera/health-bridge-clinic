@@ -1,42 +1,156 @@
-<h1>Statistiche</h1>
+<div class="flex flex-col gap-6">
+  <header>
+    <h1 class="text-[28px] sm:text-[32px]">{{ 'analytics.title' | t }}</h1>
+    <p class="mt-0.5 text-base text-muted">{{ 'analytics.subtitle' | t }}</p>
+  </header>
 
-<div class="grid grid-cols-2 gap-5">
-  <div class="col-span-1">
-    <div class="island">
-      <h2>Utenti</h2>
-      @if (analytics(); as analytics) {
-        @if (usersChartData(); as chartData) {
-          <canvas
-            baseChart
-            [data]="chartData"
-            type="pie"
-            class="mb-5"></canvas>
+  @switch (state()) {
+    @case ('loading') {
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" role="status">
+        <span class="sr-only">{{ 'common.loading' | t }}</span>
+        @for (tile of [1, 2, 3, 4]; track tile) {
+          <div class="card flex flex-col gap-3 p-[22px]" aria-hidden="true">
+            <div class="skeleton h-4 w-1/2"></div>
+            <div class="skeleton h-9 w-1/3"></div>
+            <div class="skeleton h-3 w-3/4"></div>
+          </div>
         }
+      </div>
+      <div class="grid gap-4 lg:grid-cols-2" aria-hidden="true">
+        <div class="card skeleton h-72"></div>
+        <div class="card skeleton h-72"></div>
+      </div>
+    }
+    @case ('error') {
+      <section class="card">
+        <app-empty-state icon="fa-triangle-exclamation" tone="error" [heading]="'analytics.loadError' | t">
+          <button type="button" class="btn btn-secondary" (click)="load()">
+            <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>{{ 'common.retry' | t }}
+          </button>
+        </app-empty-state>
+      </section>
+    }
+    @default {
+      @if (analytics(); as a) {
+        <section class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4" [attr.aria-label]="'analytics.indicators' | t">
+          <div class="card p-[22px]">
+            <p class="text-sm font-medium text-muted">{{ 'analytics.totalReports' | t }}</p>
+            <p class="kpi-value">{{ a.totalReports | localNumber }}</p>
+            <p class="mt-0.5 text-sm text-muted">{{ 'analytics.totalDetail' | t: {created: a.createdReports, progress: a.inProgressReports, final: a.finalizedReports} }}</p>
+          </div>
+          <div class="card p-[22px]">
+            <p class="text-sm font-medium text-muted">{{ 'analytics.avgTime' | t }}</p>
+            @if (averageTime(); as time) {
+              <p class="kpi-value">{{ time.value | localNumber: 1 }} <span class="text-lg font-semibold">{{ time.unit | t: {count: time.value} }}</span></p>
+              <p class="mt-0.5 text-sm text-muted">{{ 'analytics.avgDetail' | t }}</p>
+            } @else {
+              <p class="kpi-value text-muted">{{ 'common.none' | t }}</p>
+              <p class="mt-0.5 text-sm text-muted">{{ 'analytics.avgNone' | t }}</p>
+            }
+          </div>
+          <div class="card p-[22px]">
+            <p class="text-sm font-medium text-muted">{{ 'analytics.users' | t }}</p>
+            <p class="kpi-value">{{ a.totalUsers | localNumber }}</p>
+            <p class="mt-0.5 text-sm text-muted">{{ 'analytics.usersDetail' | t: {doctors: a.totalDoctors, patients: a.totalPatients} }}</p>
+          </div>
+          <div class="card p-[22px]">
+            <p class="text-sm font-medium text-muted">{{ 'analytics.exams' | t }}</p>
+            <p class="kpi-value">{{ a.totalExams | localNumber }}</p>
+            <p class="mt-0.5 text-sm" [class]="a.outOfRangeExams ? 'font-semibold text-danger' : 'text-muted'">
+              {{ 'analytics.examsDetail' | t: {count: a.outOfRangeExams} }}
+            </p>
+          </div>
+        </section>
 
-        <div><strong>{{ analytics.totalUsers }}</strong> utenti totali</div>
-        <div><strong>{{ analytics.totalDoctors }}</strong> dottori</div>
-        <div><strong>{{ analytics.totalPatients }}</strong> pazienti</div>
+        <div class="grid gap-4 lg:grid-cols-2">
+          <section class="card flex flex-col gap-5 p-5 sm:p-[22px]" aria-labelledby="weekly-title">
+            <div>
+              <h2 id="weekly-title" class="card-title">{{ 'analytics.weeklyTitle' | t }}</h2>
+              <p class="mt-0.5 text-sm text-muted">{{ 'analytics.weeklySubtitle' | t }}</p>
+            </div>
+            <figure class="m-0">
+              <div
+                class="flex h-[220px] items-end gap-2 border-b border-input px-1 sm:gap-3.5"
+                role="img"
+                [attr.aria-label]="'analytics.weeklyAria' | t: {values: weeklyAria()}">
+                @for (week of weeks(); track week.weekStart) {
+                  <div class="group relative flex h-full flex-1 flex-col items-center justify-end gap-1.5">
+                    <span class="font-mono text-sm font-semibold tabular-nums">{{ week.count }}</span>
+                    <div
+                      class="w-full max-w-14 rounded-t transition-opacity group-hover:opacity-80"
+                      [class]="week.current ? 'bg-brand' : 'bg-chart-bar'"
+                      [style.height]="'max(4px, calc(' + week.height + '% - 28px))'"></div>
+                    <span class="pointer-events-none absolute bottom-full z-10 mb-1 hidden rounded-md bg-ink px-2 py-1 text-xs whitespace-nowrap text-white group-hover:block" aria-hidden="true">
+                      {{ 'analytics.weekOf' | t: {date: week.label, count: week.count} }}
+                    </span>
+                  </div>
+                }
+              </div>
+              <div class="mt-2 flex gap-2 px-1 sm:gap-3.5" aria-hidden="true">
+                @for (week of weeks(); track week.weekStart) {
+                  <span class="flex-1 text-center text-[13px] text-muted">{{ week.label }}</span>
+                }
+              </div>
+            </figure>
+          </section>
+
+          <section class="card flex flex-col gap-5 p-5 sm:p-[22px]" aria-labelledby="status-title">
+            <div>
+              <h2 id="status-title" class="card-title">{{ 'analytics.statusTitle' | t }}</h2>
+              <p class="mt-0.5 text-sm text-muted">{{ 'analytics.statusSubtitle' | t }}</p>
+            </div>
+            <div
+              class="flex h-10 gap-0.5 overflow-hidden rounded-lg bg-hover"
+              role="img"
+              [attr.aria-label]="'analytics.statusAria' | t: {created: a.createdReports, progress: a.inProgressReports, final: a.finalizedReports}">
+              @for (slice of statusSlices(); track slice.key) {
+                @if (slice.count) {
+                  <div [class]="slice.fill" [style.flex-grow]="slice.count"></div>
+                }
+              }
+            </div>
+            <ul class="flex flex-col gap-3.5">
+              @for (slice of statusSlices(); track slice.key) {
+                <li class="flex items-center gap-2.5 text-[15px]">
+                  <span class="size-3 shrink-0 rounded-[3px]" [class]="slice.fill" aria-hidden="true"></span>
+                  <span class="flex-1">{{ slice.key | t }}</span>
+                  <strong class="font-mono tabular-nums">{{ slice.count }}</strong>
+                  <span class="w-12 text-right text-muted tabular-nums">{{ slice.share }}%</span>
+                </li>
+              }
+            </ul>
+            @if (a.staleCreatedReports) {
+              <p class="note mt-auto">
+                {{ 'analytics.staleNote' | t: {count: a.staleCreatedReports} }}
+                <a class="link" routerLink="/reports" [queryParams]="{status: 'CREATED'}">{{ 'analytics.staleLink' | t }}</a>
+              </p>
+            }
+          </section>
+        </div>
+
+        <section class="card flex flex-col gap-4.5 p-5 sm:p-[22px]" aria-labelledby="split-title">
+          <div>
+            <h2 id="split-title" class="card-title">{{ 'analytics.splitTitle' | t }}</h2>
+            <p class="mt-0.5 text-sm text-muted">{{ 'analytics.splitSubtitle' | t }}</p>
+          </div>
+          <ul class="flex flex-col gap-3.5">
+            <li class="grid grid-cols-[6rem_minmax(0,1fr)_2.5rem] items-center gap-3.5 text-[15px] sm:grid-cols-[11rem_minmax(0,1fr)_2.5rem]">
+              <span class="font-semibold">{{ 'analytics.doctors' | t }}</span>
+              <span class="h-3.5 rounded-full bg-hover" aria-hidden="true">
+                <span class="block h-full rounded-full bg-brand" [style.width.%]="userShares().doctors"></span>
+              </span>
+              <span class="text-right font-mono font-bold tabular-nums">{{ a.totalDoctors }}</span>
+            </li>
+            <li class="grid grid-cols-[6rem_minmax(0,1fr)_2.5rem] items-center gap-3.5 text-[15px] sm:grid-cols-[11rem_minmax(0,1fr)_2.5rem]">
+              <span class="font-semibold">{{ 'analytics.patients' | t }}</span>
+              <span class="h-3.5 rounded-full bg-hover" aria-hidden="true">
+                <span class="block h-full rounded-full bg-brand" [style.width.%]="userShares().patients"></span>
+              </span>
+              <span class="text-right font-mono font-bold tabular-nums">{{ a.totalPatients }}</span>
+            </li>
+          </ul>
+        </section>
       }
-    </div>
-  </div>
-
-  <div class="col-span-1">
-    <div class="island">
-      <h2>Referti</h2>
-      @if (analytics(); as analytics) {
-        @if (reportsChartData(); as chartData) {
-          <canvas
-            baseChart
-            [data]="chartData"
-            type="pie"
-            class="mb-5"></canvas>
-        }
-
-        <div><strong>{{ analytics.totalReports }}</strong> referti totali</div>
-        <div><strong>{{ analytics.createdReports }}</strong> referti in stato "Creato"</div>
-        <div><strong>{{ analytics.inProgressReports }}</strong> referti in stato "In corso"</div>
-        <div><strong>{{ analytics.finalizedReports }}</strong> referti in stato "Finalizzato"</div>
-      }
-    </div>
-  </div>
+    }
+  }
 </div>

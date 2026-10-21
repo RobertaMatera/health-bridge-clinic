@@ -1,37 +1,20 @@
-import {Component, input} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, input} from '@angular/core';
 import {ReportStatus} from '@app/reports/models/report-status-enum';
+import {StatusAudience, statusBadgeClass, statusKey} from '@app/reports/models/report-status';
+import {TranslatePipe} from '@app/commons/i18n/translate-pipe';
 
+/** Status pill: colour, dot and text label together, so colour is never the only signal. */
 @Component({
   selector: 'app-report-status-badge',
-  imports: [],
-  templateUrl: './report-status-badge.html'
+  imports: [TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `<span class="badge" [class]="classes()">{{ labelKey() | t }}</span>`
 })
 export class ReportStatusBadge {
-  status = input<ReportStatus>();
+  status = input.required<ReportStatus>();
+  audience = input<StatusAudience>('doctor');
+  size = input<'sm' | 'md'>('md');
 
-  statusClass() {
-    switch (this.status()) {
-      case ReportStatus.CREATED:
-        return 'badge-blue';
-      case ReportStatus.IN_PROGRESS:
-        return 'badge-green';
-      case ReportStatus.FINALIZED:
-        return 'badge-red';
-      default:
-        return 'badge-gray';
-    }
-  }
-
-  statusLabel(): string {
-    switch (this.status()) {
-      case ReportStatus.CREATED:
-        return 'Creato';
-      case ReportStatus.IN_PROGRESS:
-        return 'In corso';
-      case ReportStatus.FINALIZED:
-        return 'Finalizzato';
-      default:
-        return '';
-    }
-  }
+  protected readonly labelKey = computed(() => statusKey(this.status(), this.audience()));
+  protected readonly classes = computed(() => `${statusBadgeClass(this.status())} ${this.size() === 'sm' ? 'badge-sm' : ''}`);
 }

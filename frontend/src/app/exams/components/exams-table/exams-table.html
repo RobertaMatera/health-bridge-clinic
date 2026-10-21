@@ -1,0 +1,75 @@
+<div class="overflow-x-auto max-md:hidden">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th scope="col">{{ 'reports.exams.colAnalysis' | t }}</th>
+        <th scope="col" class="text-right!">{{ 'reports.exams.colValue' | t }}</th>
+        <th scope="col">{{ 'reports.exams.colUnit' | t }}</th>
+        <th scope="col">{{ 'reports.exams.colReference' | t }}</th>
+        <th scope="col">{{ 'reports.exams.colResult' | t }}</th>
+        @if (editable()) {
+          <th scope="col" class="w-24"><span class="sr-only">{{ 'reports.exams.colActions' | t }}</span></th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (exam of exams(); track exam.id) {
+        <tr>
+          <th scope="row" class="border-b border-line-soft bg-transparent px-4 py-3.5 text-left text-[15px] font-semibold tracking-normal text-ink normal-case">
+            {{ exam.analysis }}
+          </th>
+          <td class="num text-base font-medium">{{ exam.examValue | localNumber }}</td>
+          <td class="text-ink-soft">{{ exam.unitOfMeasure }}</td>
+          <td>
+            <span class="text-sm text-ink-soft">{{ (exam | examRange) || ('common.none' | t) }}</span>
+            <app-range-indicator [exam]="exam"/>
+          </td>
+          <td><app-exam-flag [exam]="exam"/></td>
+          @if (editable()) {
+            <td class="whitespace-nowrap">
+              <button type="button" class="btn-icon" [attr.aria-label]="'reports.exams.editAria' | t: {name: exam.analysis}" (click)="edit.emit(exam)">
+                <i class="fa-solid fa-pen" aria-hidden="true"></i>
+              </button>
+              <button type="button" class="btn-icon hover:text-danger" [attr.aria-label]="'reports.exams.deleteAria' | t: {name: exam.analysis}" (click)="remove.emit(exam)">
+                <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+              </button>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
+<ul class="md:hidden">
+  @for (exam of exams(); track exam.id) {
+    <li class="flex items-start justify-between gap-3 border-t border-line-soft px-4 py-3.5">
+      <div class="min-w-0">
+        <p class="text-[15px] font-semibold">{{ exam.analysis }}</p>
+        <p class="mt-0.5 text-[13px] text-muted">
+          @if (exam | examRange; as range) {
+            {{ 'reports.exams.reference' | t: {range: range} }}
+          } @else {
+            {{ 'patient.report.noReference' | t }}
+          }
+        </p>
+        @if (editable()) {
+          <div class="-ml-3 mt-1 flex">
+            <button type="button" class="btn-icon" [attr.aria-label]="'reports.exams.editAria' | t: {name: exam.analysis}" (click)="edit.emit(exam)">
+              <i class="fa-solid fa-pen" aria-hidden="true"></i>
+            </button>
+            <button type="button" class="btn-icon hover:text-danger" [attr.aria-label]="'reports.exams.deleteAria' | t: {name: exam.analysis}" (click)="remove.emit(exam)">
+              <i class="fa-regular fa-trash-can" aria-hidden="true"></i>
+            </button>
+          </div>
+        }
+      </div>
+      <div class="shrink-0 text-right">
+        <p class="font-mono text-[17px] font-medium tabular-nums">
+          {{ exam.examValue | localNumber }} <span class="font-sans text-[13px] text-muted">{{ exam.unitOfMeasure }}</span>
+        </p>
+        <app-exam-flag class="mt-1 inline-block" [exam]="exam"/>
+      </div>
+    </li>
+  }
+</ul>

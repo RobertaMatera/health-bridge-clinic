@@ -53,7 +53,7 @@ public class ReportsController {
 
     // RF05 report finalization
     @PutMapping("/{reportID}/finalize")
-    public ReportDTO finalize(@PathVariable Long reportID, @RequestBody ReportDTO reportDTO) {
+    public ReportDTO finalize(@PathVariable Long reportID, @Valid @RequestBody ReportDTO reportDTO) {
         return reportsService.finalize(reportID, reportDTO);
     }
 

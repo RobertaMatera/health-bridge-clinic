@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.project.work.rm.backend.dto.ExamDTO;
 import com.project.work.rm.backend.dto.ReportDTO;
 import com.project.work.rm.backend.enums.ReportStatus;
+import com.project.work.rm.backend.enums.UserRole;
 import com.project.work.rm.backend.mapper.ExamsMapper;
 import com.project.work.rm.backend.mapper.ReportsMapper;
 import com.project.work.rm.backend.model.Exam;
@@ -13,11 +14,16 @@ import com.project.work.rm.backend.model.Report;
 import com.project.work.rm.backend.model.User;
 import com.project.work.rm.backend.repository.ReportsRepository;
 import com.project.work.rm.backend.repository.UsersRepository;
+import com.project.work.rm.backend.exception.BusinessRuleException;
+import com.project.work.rm.backend.exception.ErrorCode;
+import com.project.work.rm.backend.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ReportsService {
     private final ReportsRepository reportsRepository;
     private final ReportsMapper reportsMapper;
@@ -25,6 +31,7 @@ public class ReportsService {
     private final ExamsMapper examsMapper;
     private final AuthService authService;
 
+    @Transactional(readOnly = true)
     public List<ReportDTO> getAll() {
         if (authService.isDoctor()) {
             return reportsRepository
@@ -81,6 +88,7 @@ public class ReportsService {
         return saveReport(existingReport);
     }
 
+    @Transactional(readOnly = true)
     public List<ReportDTO> getReportsByStatus(ReportStatus status) {
         if (authService.isDoctor()) {
             return reportsRepository
@@ -107,18 +115,33 @@ public class ReportsService {
     private Report findReportById(Long reportID) {
         return reportsRepository
                 .findById(reportID)
-                .orElseThrow(() -> new RuntimeException("Report not found with id: " + reportID));
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.REPORT_NOT_FOUND, "Report not found with id: " + reportID));
     }
 
+    @Transactional(readOnly = true)
     public ReportDTO getReportById(Long reportID) {
         Report report = findReportById(reportID);
+        checkReadAccess(report);
         return reportsMapper.toDTO(report);
+    }
+
+    // Patients may only read their own reports. Answer 404 rather than 403 so ids of other
+    // patients' reports cannot be probed.
+    private void checkReadAccess(Report report) {
+        if (authService.isDoctor()) {
+            return;
+        }
+        Long currentUserId = authService.getCurrentAuditor().map(User::getId).orElse(null);
+        if (report.getPatient() == null || !report.getPatient().getId().equals(currentUserId)) {
+            throw new ResourceNotFoundException(ErrorCode.REPORT_NOT_FOUND, "Report not found with id: " + report.getId());
+        }
     }
 
     private void checkUpdatableStatus(Report report, boolean isFinalizing) {
         if (report.getStatus() != ReportStatus.IN_PROGRESS && report.getStatus() != ReportStatus.CREATED) {
             String action = isFinalizing ? "finalized" : "modified";
-            throw new IllegalStateException("Report can only be " + action + " when in IN_PROGRESS or CREATED status.");
+            throw new BusinessRuleException(ErrorCode.REPORT_NOT_EDITABLE,
+                    "Report can only be " + action + " when in IN_PROGRESS or CREATED status.");
         }
     }
 
@@ -138,11 +161,16 @@ public class ReportsService {
     }
 
     private void validatePatient(ReportDTO reportDTO, Report existingReport) {
+        if (reportDTO.getPatient() == null || reportDTO.getPatient().getEmail() == null) {
+            throw new BusinessRuleException(ErrorCode.PATIENT_REQUIRED, "A patient is required.");
+        }
+
         User patient = usersRepository
                 .findByEmail(reportDTO
                         .getPatient()
                         .getEmail())
-                .orElseThrow(() -> new RuntimeException("Patient not found!"));
+                .filter(user -> user.getRole() == UserRole.PATIENT)
+                .orElseThrow(() -> new ResourceNotFoundException(ErrorCode.PATIENT_NOT_FOUND, "Patient not found."));
 
         setPatientInReport(patient, existingReport);
     }
@@ -155,13 +183,13 @@ public class ReportsService {
         if (existingReport.getExams() == null || existingReport
                 .getExams()
                 .isEmpty()) {
-            throw new IllegalStateException("Cannot finalize report without exams.");
+            throw new BusinessRuleException(ErrorCode.REPORT_MISSING_EXAMS, "Cannot finalize report without exams.");
         }
 
         if (existingReport.getOutcome() == null || existingReport
                 .getOutcome()
-                .isEmpty()) {
-            throw new IllegalStateException("Cannot finalize report without an outcome.");
+                .isBlank()) {
+            throw new BusinessRuleException(ErrorCode.REPORT_MISSING_OUTCOME, "Cannot finalize report without an outcome.");
         }
     }
 }

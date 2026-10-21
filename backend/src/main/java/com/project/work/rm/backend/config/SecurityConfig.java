@@ -1,7 +1,12 @@
 package com.project.work.rm.backend.config;
 
+import com.project.work.rm.backend.exception.ErrorCode;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -11,6 +16,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
@@ -18,21 +27,26 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig
         implements WebMvcConfigurer {
 
+    private static final String DOCTOR = "DOCTOR";
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(withDefaults())
+                // No WWW-Authenticate header on 401, otherwise the browser opens its native login prompt.
+                .httpBasic(basic -> basic.authenticationEntryPoint((request, response, ex) ->
+                        writeError(request, response, HttpServletResponse.SC_UNAUTHORIZED, ErrorCode.UNAUTHENTICATED, "Authentication required")))
+                .exceptionHandling(handling -> handling.accessDeniedHandler((request, response, ex) ->
+                        writeError(request, response, HttpServletResponse.SC_FORBIDDEN, ErrorCode.ACCESS_DENIED, "Access denied")))
                 .cors(withDefaults())
-                .authorizeHttpRequests(http -> {
-                    http
-                            .requestMatchers("/auth/**")
-                            .permitAll();
-
-                    http
-                            .anyRequest()
-                            .authenticated();
-                })
+                .authorizeHttpRequests(http -> http
+                        .requestMatchers("/auth/**").permitAll()
+                        // API documentation holds no data; the endpoints it calls stay protected.
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                        // Reading reports is allowed to both roles; ReportsService limits patients to their own.
+                        .requestMatchers(HttpMethod.GET, "/reports", "/reports/**").authenticated()
+                        .requestMatchers("/reports/**", "/exams/**", "/analytics/**", "/users/**").hasRole(DOCTOR)
+                        .anyRequest().authenticated())
                 .build();
     }
 
@@ -51,5 +65,15 @@ public class SecurityConfig
                 .exposedHeaders("Authorization", "X-Custom-Header")
                 .allowCredentials(true)
                 .maxAge(3600);
+    }
+
+    // Same shape as ApiErrorDTO; written by hand because these errors happen before the MVC layer.
+    private static void writeError(HttpServletRequest request, HttpServletResponse response,
+                                   int status, ErrorCode code, String message) throws IOException {
+        response.setStatus(status);
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8);
+        response.getWriter().write("{\"timestamp\":\"%s\",\"status\":%d,\"code\":\"%s\",\"message\":\"%s\",\"path\":\"%s\"}"
+                .formatted(Instant.now(), status, code, message, request.getRequestURI()));
     }
 }

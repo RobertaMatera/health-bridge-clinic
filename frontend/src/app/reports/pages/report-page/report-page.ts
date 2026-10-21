@@ -1,38 +1,61 @@
-import {Component, inject, signal} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ChangeDetectionStrategy, Component, DestroyRef, inject, signal} from '@angular/core';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {HttpErrorResponse} from '@angular/common/http';
+import {ActivatedRoute, RouterLink} from '@angular/router';
 import {Report} from '@app/reports/models/report-model';
 import {ReportsService} from '@app/reports/services/reports-service';
-import {ReportStatusBadge} from '@app/reports/components/report-status-badge/report-status-badge';
-import {ReportMetadata} from '@app/reports/components/report-metadata/report-metadata';
-import {ReportDetails} from '@app/reports/components/report-details/report-details';
+import {ReportEditor} from '@app/reports/components/report-editor/report-editor';
+import {PatientReport} from '@app/patient/components/patient-report/patient-report';
+import {AuthService} from '@app/auth/services/auth-service';
+import {EmptyState} from '@app/commons/ui/empty-state/empty-state';
+import {Skeleton} from '@app/commons/ui/skeleton/skeleton';
+import {TranslatePipe} from '@app/commons/i18n/translate-pipe';
+
+type LoadState = 'loading' | 'ready' | 'notFound' | 'error';
 
 @Component({
   selector: 'app-report-page',
-  imports: [
-    ReportStatusBadge,
-    ReportMetadata,
-    ReportDetails
-  ],
+  imports: [ReportEditor, PatientReport, EmptyState, Skeleton, RouterLink, TranslatePipe],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './report-page.html'
 })
 export class ReportPage {
-  reportsService = inject(ReportsService);
+  private readonly reportsService = inject(ReportsService);
+  private readonly destroyRef = inject(DestroyRef);
+  protected readonly authService = inject(AuthService);
 
-  reportID = signal<number | null>(null);
-  report = signal<Report | undefined>(undefined);
+  protected readonly report = signal<Report | null>(null);
+  protected readonly state = signal<LoadState>('loading');
+  private reportId = 0;
+  protected readonly printOnOpen = inject(ActivatedRoute).snapshot.queryParamMap.has('print');
 
   constructor() {
-    const route = inject(ActivatedRoute);
-    const reportID = route.snapshot.params['id'];
-    this.reportID.set(parseInt(reportID));
-
-    this.loadData();
+    inject(ActivatedRoute).paramMap
+      .pipe(takeUntilDestroyed())
+      .subscribe(params => {
+        this.reportId = Number(params.get('id'));
+        this.report.set(null);
+        this.load();
+      });
   }
 
-  loadData() {
-    if (this.reportID()) {
-      this.reportsService.getByID(this.reportID()!)
-        .subscribe(report => this.report.set(report));
+  protected load(): void {
+    if (!Number.isInteger(this.reportId) || this.reportId <= 0) {
+      this.state.set('notFound');
+      return;
     }
+    if (!this.report()) {
+      this.state.set('loading');
+    }
+    this.reportsService.getByID(this.reportId)
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: report => {
+          this.report.set(report);
+          this.state.set('ready');
+        },
+        error: (error: unknown) =>
+          this.state.set(error instanceof HttpErrorResponse && error.status === 404 ? 'notFound' : 'error')
+      });
   }
 }
