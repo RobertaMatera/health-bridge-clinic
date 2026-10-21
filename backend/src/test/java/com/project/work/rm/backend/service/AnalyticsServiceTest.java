@@ -68,6 +68,16 @@ class AnalyticsServiceTest {
     }
 
     @Test
+    void staleCreatedReportsAreThoseCreatedMoreThanTwoDaysAgo() {
+        when(reportsRepository.findByStatusAndFinalizedAtIsNotNull(ReportStatus.FINALIZED)).thenReturn(List.of());
+        when(reportsRepository.findCreatedAtSince(any())).thenReturn(List.of());
+        when(reportsRepository.countByStatusAndCreatedAtBefore(ReportStatus.CREATED, LocalDateTime.of(2026, 10, 19, 10, 0)))
+                .thenReturn(2L);
+
+        assertThat(analyticsService.getAll().getStaleCreatedReports()).isEqualTo(2L);
+    }
+
+    @Test
     void averageTimeIsNullWithoutFinalizedReports() {
         when(reportsRepository.findByStatusAndFinalizedAtIsNotNull(ReportStatus.FINALIZED)).thenReturn(List.of());
         when(reportsRepository.findCreatedAtSince(any())).thenReturn(List.of());

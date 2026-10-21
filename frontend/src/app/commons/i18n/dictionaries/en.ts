@@ -357,6 +357,11 @@ export const en = {
     legendCreated: 'Created, waiting for the first exam',
     legendProgress: 'In progress',
     legendFinal: 'Finalized, visible to patients',
+    staleNote: {
+      one: '{count} report has been waiting in “Created” for more than 2 days.',
+      other: '{count} reports have been waiting in “Created” for more than 2 days.'
+    },
+    staleLink: 'View list',
     splitTitle: 'Doctors and patients',
     splitSubtitle: 'Registered accounts',
     doctors: 'Doctors',

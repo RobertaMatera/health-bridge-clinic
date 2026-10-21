@@ -28,6 +28,7 @@ import java.util.List;
 public class AnalyticsService {
 
     static final int WEEKS = 6;
+    static final int STALE_AFTER_DAYS = 2;
 
     private final UsersRepository usersRepository;
     private final ReportsRepository reportsRepository;
@@ -44,6 +45,8 @@ public class AnalyticsService {
                 .createdReports(reportsRepository.countByStatus(ReportStatus.CREATED))
                 .inProgressReports(reportsRepository.countByStatus(ReportStatus.IN_PROGRESS))
                 .finalizedReports(reportsRepository.countByStatus(ReportStatus.FINALIZED))
+                .staleCreatedReports(reportsRepository.countByStatusAndCreatedAtBefore(
+                        ReportStatus.CREATED, LocalDateTime.now(clock).minusDays(STALE_AFTER_DAYS)))
                 .averageMinutesInProgress(averageMinutesToFinalize())
                 .totalExams(examsRepository.count())
                 .outOfRangeExams(examsRepository.countOutOfRange())

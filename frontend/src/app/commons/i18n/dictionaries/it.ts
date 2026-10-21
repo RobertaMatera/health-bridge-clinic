@@ -356,6 +356,11 @@ export const it: Dictionary = {
     legendCreated: 'Creati, in attesa del primo esame',
     legendProgress: 'In lavorazione',
     legendFinal: 'Finalizzati, visibili ai pazienti',
+    staleNote: {
+      one: '{count} referto è fermo in stato “Creato” da più di 2 giorni.',
+      other: '{count} referti sono fermi in stato “Creato” da più di 2 giorni.'
+    },
+    staleLink: 'Vedi elenco',
     splitTitle: 'Medici e pazienti',
     splitSubtitle: 'Account registrati',
     doctors: 'Medici',

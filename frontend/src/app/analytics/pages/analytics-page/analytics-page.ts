@@ -1,5 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {RouterLink} from '@angular/router';
 import {AnalyticsService} from '@app/analytics/services/analytics-service';
 import {Analytics} from '@app/analytics/models/analytics-model';
 import {I18nService} from '@app/commons/i18n/i18n-service';
@@ -22,7 +23,7 @@ interface StatusSlice {
 /** Clinic statistics drawn with plain HTML/CSS: every chart has a text equivalent. */
 @Component({
   selector: 'app-analytics-page',
-  imports: [TranslatePipe, LocalNumberPipe, EmptyState],
+  imports: [RouterLink, TranslatePipe, LocalNumberPipe, EmptyState],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './analytics-page.html'
 })

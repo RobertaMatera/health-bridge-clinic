@@ -9,6 +9,8 @@ export interface Analytics {
   inProgressReports: number;
   finalizedReports: number;
   totalReports: number;
+  /** Reports still CREATED more than 2 days after creation. */
+  staleCreatedReports: number;
 
   totalUsers: number;
   totalPatients: number;

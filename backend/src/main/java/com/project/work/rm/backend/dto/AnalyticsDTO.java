@@ -15,6 +15,9 @@ public class AnalyticsDTO {
     private Long finalizedReports;
     private Long totalReports;
 
+    @Schema(description = "Reports still in CREATED status more than 2 days after creation")
+    private Long staleCreatedReports;
+
     private Long totalUsers;
     private Long totalPatients;
     private Long totalDoctors;

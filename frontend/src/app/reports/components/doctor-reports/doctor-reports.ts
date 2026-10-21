@@ -51,8 +51,10 @@ export class DoctorReports {
 
   protected readonly reports = signal<Report[]>([]);
   protected readonly state = signal<LoadState>('loading');
-  protected readonly statusFilter = signal<StatusFilter>('ALL');
-  protected readonly query = signal(inject(ActivatedRoute).snapshot.queryParamMap.get('q') ?? '');
+  private readonly queryParams = inject(ActivatedRoute).snapshot.queryParamMap;
+  // ?status=CREATED and ?q=name let other pages link to a pre-filtered list.
+  protected readonly statusFilter = signal<StatusFilter>(parseStatus(this.queryParams.get('status')));
+  protected readonly query = signal(this.queryParams.get('q') ?? '');
   protected readonly sort = signal<SortOrder>('newest');
   protected readonly showCreateDialog = signal(false);
 
@@ -163,6 +165,10 @@ export class DoctorReports {
     }
     return this.i18n.formatDate(date, 'dateTime');
   }
+}
+
+function parseStatus(value: string | null): StatusFilter {
+  return REPORT_STATUSES.find(status => status === value) ?? 'ALL';
 }
 
 function normalize(value: string): string {

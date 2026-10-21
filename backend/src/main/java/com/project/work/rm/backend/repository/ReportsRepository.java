@@ -19,6 +19,7 @@ public interface ReportsRepository
     List<Report> findAllByCreatedByAndStatus(User doctor, ReportStatus status);
     List<Report> findAllByPatientAndStatus(User patient, ReportStatus status);
     long countByStatus(ReportStatus status);
+    long countByStatusAndCreatedAtBefore(ReportStatus status, LocalDateTime before);
 
     List<FinalizationTimes> findByStatusAndFinalizedAtIsNotNull(ReportStatus status);
 

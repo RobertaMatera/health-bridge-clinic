@@ -119,6 +119,12 @@
                 </li>
               }
             </ul>
+            @if (a.staleCreatedReports) {
+              <p class="note mt-auto">
+                {{ 'analytics.staleNote' | t: {count: a.staleCreatedReports} }}
+                <a class="link" routerLink="/reports" [queryParams]="{status: 'CREATED'}">{{ 'analytics.staleLink' | t }}</a>
+              </p>
+            }
           </section>
         </div>
 
