@@ -100,7 +100,7 @@
 
     <div class="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
       <button type="button" class="btn btn-secondary btn-lg" (click)="dismiss.emit()">{{ 'common.cancel' | t }}</button>
-      <button type="submit" class="btn btn-primary btn-lg" [disabled]="saving()">{{ 'common.save' | t }}</button>
+      <button type="submit" class="btn btn-primary btn-lg" [disabled]="saving()" [attr.aria-busy]="saving() || null">{{ 'common.save' | t }}</button>
     </div>
   </form>
 </app-dialog>

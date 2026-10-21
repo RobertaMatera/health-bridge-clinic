@@ -120,6 +120,20 @@
     @apply cursor-not-allowed;
   }
 
+  /* In-flight action: a spinner replaces the icon, the label stays for screen readers. */
+  .btn[aria-busy="true"] {
+    @apply cursor-progress;
+  }
+
+  .btn[aria-busy="true"] > i {
+    @apply hidden;
+  }
+
+  .btn[aria-busy="true"]::before {
+    content: "";
+    @apply size-4 shrink-0 animate-spin rounded-full border-2 border-current border-r-transparent;
+  }
+
   .btn-lg {
     @apply min-h-12 px-5 text-base;
   }
@@ -130,6 +144,10 @@
 
   .btn-primary:disabled, .btn-primary[aria-disabled="true"] {
     @apply bg-line text-ink-soft hover:bg-line;
+  }
+
+  .btn-primary[aria-busy="true"] {
+    @apply bg-brand text-white hover:bg-brand;
   }
 
   .btn-secondary {

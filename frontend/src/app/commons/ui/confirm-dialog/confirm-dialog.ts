@@ -17,6 +17,7 @@ import {TranslatePipe} from '@app/commons/i18n/translate-pipe';
           class="btn btn-lg"
           [class]="tone() === 'danger' ? 'btn-danger' : 'btn-primary'"
           [disabled]="pending()"
+          [attr.aria-busy]="pending() || null"
           (click)="confirm.emit()">
           @if (icon()) {
             <i class="fa-solid {{ icon() }}" aria-hidden="true"></i>
