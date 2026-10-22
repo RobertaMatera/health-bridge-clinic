@@ -43,14 +43,14 @@ public class DatabaseSeeder implements ApplicationRunner {
             return;
         }
 
-        User massari = user("Giuseppe", "Massari", "g.massari@gmail.com", "patient1", UserRole.PATIENT);
-        User spagnoli = user("Luisa", "Spagnoli", "spagnoli.luisa@libero.it", "patient2", UserRole.PATIENT);
-        User colombo = user("Anna", "Colombo", "a.colombo@mail.it", "patient3", UserRole.PATIENT);
-        User ferri = user("Marco", "Ferri", "m.ferri@mail.it", "patient4", UserRole.PATIENT);
-        User greco = user("Sara", "Greco", "s.greco@mail.it", "patient5", UserRole.PATIENT);
-        User bianchi = user("Paolo", "Bianchi", "p.bianchi@mail.it", "patient6", UserRole.PATIENT);
-        User rossi = user("Claudia", "Rossi", "claudiarossi@gmail.com", "doctor1", UserRole.DOCTOR);
-        User poi = user("Giorgio", "Poi", "g.poi@gmail.com", "doctor2", UserRole.DOCTOR);
+        User massari = user("Giuseppe", "Massari", "g.massari@healthbridge.test", "patient1", UserRole.PATIENT);
+        User spagnoli = user("Luisa", "Spagnoli", "spagnoli.luisa@healthbridge.test", "patient2", UserRole.PATIENT);
+        User colombo = user("Anna", "Colombo", "a.colombo@healthbridge.test", "patient3", UserRole.PATIENT);
+        User ferri = user("Marco", "Ferri", "m.ferri@healthbridge.test", "patient4", UserRole.PATIENT);
+        User greco = user("Sara", "Greco", "s.greco@healthbridge.test", "patient5", UserRole.PATIENT);
+        User bianchi = user("Paolo", "Bianchi", "p.bianchi@healthbridge.test", "patient6", UserRole.PATIENT);
+        User rossi = user("Claudia", "Rossi", "claudiarossi@healthbridge.test", "doctor1", UserRole.DOCTOR);
+        User poi = user("Giorgio", "Poi", "g.poi@healthbridge.test", "doctor2", UserRole.DOCTOR);
 
         report(ferri, poi, ReportStatus.FINALIZED, Duration.ofDays(36), Duration.ofDays(33),
                 "Emocromo e funzionalità renale nella norma. Nessun intervento necessario.",

@@ -29,9 +29,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 class ReportsServiceTest {
 
-    private static final String PATIENT = "g.massari@gmail.com";
-    private static final String OTHER_PATIENT = "spagnoli.luisa@libero.it";
-    private static final String DOCTOR = "g.poi@gmail.com";
+    private static final String PATIENT = "g.massari@healthbridge.test";
+    private static final String OTHER_PATIENT = "spagnoli.luisa@healthbridge.test";
+    private static final String DOCTOR = "g.poi@healthbridge.test";
 
     @Autowired
     private ReportsService reportsService;

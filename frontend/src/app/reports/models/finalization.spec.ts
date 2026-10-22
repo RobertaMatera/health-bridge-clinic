@@ -2,7 +2,7 @@ import {finalizationChecklist} from '@app/reports/models/finalization';
 import {Report} from '@app/reports/models/report-model';
 import {UserRole} from '@app/users/models/user-role-enum';
 
-const patient = {id: 1, firstName: 'Giuseppe', lastName: 'Massari', email: 'g.massari@gmail.com', role: UserRole.PATIENT};
+const patient = {id: 1, firstName: 'Giuseppe', lastName: 'Massari', email: 'g.massari@healthbridge.test', role: UserRole.PATIENT};
 const anExam = {id: 1, analysis: 'LDL', unitOfMeasure: 'mg/dL', examValue: 120};
 
 describe('finalizationChecklist', () => {
