@@ -4,6 +4,22 @@ Health Bridge Clinic is a medical reports application for a private clinic. Doct
 
 Evolved from my BSc thesis project — see the [original version](https://github.com/RobertaMatera/rm-project-work-16).
 
+## Live demo
+
+**[demo.robertamatera.com](https://demo.robertamatera.com)** — no account or setup needed.
+
+The demo is the real Angular frontend running entirely in the browser: a mocked API stands in for the Spring Boot backend, with fictional patients and doctors. Sign in with one click as a doctor or a patient, in English or Italian, on desktop or mobile. Everything works: creating reports, adding exams, finalizing, the statistics page and the patient's view. Changes stay in memory and are reset when the page is reloaded.
+
+The mock follows the backend's rules: role-based access, the same status transitions and validation errors, and statistics computed from the current data.
+
+```bash
+cd frontend
+npm run start:demo   # dev server at http://localhost:4200, no backend needed
+npm run build:demo   # production build of the demo in dist/frontend/browser
+```
+
+**Why the mocks are not in the production build.** The `demo` build configuration in `angular.json` uses `fileReplacements` to swap `src/app/demo/no-demo.providers.ts` (empty) for `demo.providers.ts`, which registers the mock interceptor, the seed data and the demo banner. The normal build never imports these files, so no mock code or fictional data ships with it.
+
 ## Technology stack
 
 | Layer | Stack |

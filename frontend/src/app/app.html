@@ -1,22 +1,26 @@
-<app-loading-bar/>
+<!--suppress HtmlUnknownTag, HtmlUnknownAttribute -->
+<app-loading-bar></app-loading-bar>
 <a href="#main" class="skip-link" (click)="skipToContent($event)">{{ 'common.skipToContent' | t }}</a>
+@if (demoBanner) {
+  <ng-container *ngComponentOutlet="demoBanner"></ng-container>
+}
 
 @switch (layout()) {
   @case ('doctor') {
     <app-doctor-shell>
-      <router-outlet/>
+      <router-outlet></router-outlet>
     </app-doctor-shell>
   }
   @case ('patient') {
     <app-patient-shell>
-      <router-outlet/>
+      <router-outlet></router-outlet>
     </app-patient-shell>
   }
   @default {
     <main id="main" tabindex="-1" class="outline-none">
-      <router-outlet/>
+      <router-outlet></router-outlet>
     </main>
   }
 }
 
-<app-toast-outlet/>
+<app-toast-outlet></app-toast-outlet>

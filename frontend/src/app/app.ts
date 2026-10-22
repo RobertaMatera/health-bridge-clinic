@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, computed, DOCUMENT, inject} from '@angular/core';
+import {NgComponentOutlet} from '@angular/common';
 import {RouterOutlet} from '@angular/router';
 import {AuthService} from '@app/auth/services/auth-service';
 import {UserRole} from '@app/users/models/user-role-enum';
@@ -7,16 +8,19 @@ import {PatientShell} from '@app/commons/layout/patient-shell/patient-shell';
 import {ToastOutlet} from '@app/commons/ui/toast/toast-outlet';
 import {LoadingBar} from '@app/commons/ui/loading-bar/loading-bar';
 import {TranslatePipe} from '@app/commons/i18n/translate-pipe';
+import {DEMO_MODE} from '@app/demo/demo-mode';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, DoctorShell, PatientShell, ToastOutlet, LoadingBar, TranslatePipe],
+  imports: [NgComponentOutlet, RouterOutlet, DoctorShell, PatientShell, ToastOutlet, LoadingBar, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './app.html'
 })
 export class App {
   private readonly authService = inject(AuthService);
   private readonly document = inject(DOCUMENT);
+
+  protected readonly demoBanner = inject(DEMO_MODE)?.banner ?? null;
 
   protected readonly layout = computed(() => {
     switch (this.authService.user()?.role) {
