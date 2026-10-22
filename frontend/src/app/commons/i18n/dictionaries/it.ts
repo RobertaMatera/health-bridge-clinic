@@ -124,7 +124,12 @@ export const it: Dictionary = {
       title: 'Account demo',
       hint: 'Solo nella build demo. Questi account vengono creati all’avvio del backend su un database vuoto.',
       use: 'Compila',
-      useAria: 'Compila le credenziali di {name}'
+      useAria: 'Compila le credenziali di {name}',
+      mockHint: 'Persone fittizie con password “demo”. Ognuna vede referti diversi.',
+      quickTitle: 'Prova la demo',
+      quickText: 'Nessuna configurazione: scegli un ruolo e accedi con un clic.',
+      asDoctor: 'Accedi come medico',
+      asPatient: 'Accedi come paziente'
     },
     unauthorized: {
       title: 'Accesso negato',
@@ -380,5 +385,12 @@ export const it: Dictionary = {
     doctors: 'Medici',
     patients: 'Pazienti',
     loadError: 'Non è stato possibile caricare le statistiche.'
+  },
+  demo: {
+    banner: {
+      title: 'Modalità demo',
+      text: 'dati fittizi, le modifiche non vengono salvate.',
+      dismiss: 'Nascondi l’avviso demo'
+    }
   }
 };

@@ -125,7 +125,12 @@ export const en = {
       title: 'Demo accounts',
       hint: 'Demo build only. These accounts are created when the backend starts on an empty database.',
       use: 'Fill in',
-      useAria: 'Fill in the credentials of {name}'
+      useAria: 'Fill in the credentials of {name}',
+      mockHint: 'Fictional people with password “demo”. Each one sees different reports.',
+      quickTitle: 'Try the demo',
+      quickText: 'No setup needed: pick a role and sign in with one click.',
+      asDoctor: 'Log in as Doctor',
+      asPatient: 'Log in as Patient'
     },
     unauthorized: {
       title: 'Access denied',
@@ -381,5 +386,12 @@ export const en = {
     doctors: 'Doctors',
     patients: 'Patients',
     loadError: 'Statistics could not be loaded.'
+  },
+  demo: {
+    banner: {
+      title: 'Demo mode',
+      text: 'fictional data, changes are not saved.',
+      dismiss: 'Hide demo notice'
+    }
   }
 };

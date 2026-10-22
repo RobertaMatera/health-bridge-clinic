@@ -5,6 +5,8 @@ import {routes} from './app.routes';
 import {authInterceptor} from './auth/interceptors/auth-interceptor';
 import {loadingInterceptor} from './commons/ui/loading-bar/loading-interceptor';
 import {redirectToErrorPage} from './commons/pages/error-page/error-page';
+// Swapped for demo.providers.ts by the `demo` build configuration.
+import {demoInterceptors, demoProviders} from './demo/no-demo.providers';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -14,6 +16,7 @@ export const appConfig: ApplicationConfig = {
       withViewTransitions({skipInitialTransition: true}),
       withNavigationErrorHandler(redirectToErrorPage)
     ),
-    provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor]))
+    provideHttpClient(withInterceptors([loadingInterceptor, authInterceptor, ...demoInterceptors])),
+    ...demoProviders
   ]
 };

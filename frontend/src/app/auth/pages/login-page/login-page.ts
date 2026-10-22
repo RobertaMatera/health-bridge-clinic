@@ -10,6 +10,8 @@ import {TranslationKey} from '@app/commons/i18n/i18n-types';
 import {errorMessageKey} from '@app/commons/errors/error-message';
 import {environment} from '@environments/environment';
 import {roleKey} from '@app/users/models/user-name';
+import {UserRole} from '@app/users/models/user-role-enum';
+import {DEMO_MODE} from '@app/demo/demo-mode';
 
 @Component({
   selector: 'app-login-page',
@@ -20,10 +22,18 @@ import {roleKey} from '@app/users/models/user-name';
 export class LoginPage {
   private readonly authService = inject(AuthService);
   private readonly document = inject(DOCUMENT);
+  private readonly demoMode = inject(DEMO_MODE);
+
+  protected readonly demoAccounts = this.demoMode?.accounts ?? (environment.showDemoAccounts ? DEMO_ACCOUNTS : []);
+  // Browser-only demo: one button per role, and the form starts filled in with the doctor.
+  protected readonly quickLogins = this.demoMode
+    ? [UserRole.DOCTOR, UserRole.PATIENT].map(role => this.demoAccounts.find(account => account.role === role)!)
+    : [];
+  private readonly prefill = this.quickLogins[0];
 
   protected readonly form = new FormGroup({
-    email: new FormControl('', {nonNullable: true, validators: [Validators.required, Validators.email]}),
-    password: new FormControl('', {nonNullable: true, validators: [Validators.required]}),
+    email: new FormControl(this.prefill?.email ?? '', {nonNullable: true, validators: [Validators.required, Validators.email]}),
+    password: new FormControl(this.prefill?.password ?? '', {nonNullable: true, validators: [Validators.required]}),
     remember: new FormControl(false, {nonNullable: true})
   });
 
@@ -32,9 +42,10 @@ export class LoginPage {
   protected readonly submitted = signal(false);
   protected readonly submitting = signal(false);
   protected readonly serverError = signal<TranslationKey | null>(null);
+  protected readonly quickLoginRole = signal<UserRole | null>(null);
 
   protected readonly roleKey = roleKey;
-  protected readonly demoAccounts = environment.showDemoAccounts ? DEMO_ACCOUNTS : [];
+  protected readonly isDemo = this.demoMode !== null;
 
   protected readonly features = [
     {icon: 'fa-file-lines', title: 'auth.brand.feature1Title', text: 'auth.brand.feature1Text'},
@@ -60,6 +71,16 @@ export class LoginPage {
     this.document.getElementById('login-submit')?.focus();
   }
 
+  protected quickLogin(account: DemoAccount): void {
+    this.form.patchValue({email: account.email, password: account.password});
+    this.quickLoginRole.set(account.role);
+    this.submit();
+  }
+
+  protected quickLoginKey(role: UserRole): TranslationKey {
+    return role === UserRole.DOCTOR ? 'auth.demo.asDoctor' : 'auth.demo.asPatient';
+  }
+
   protected submit(): void {
     this.submitted.set(true);
     this.serverError.set(null);
@@ -74,7 +95,10 @@ export class LoginPage {
     const {email, password, remember} = this.form.getRawValue();
     this.submitting.set(true);
     this.authService.login(email.trim(), password, remember)
-      .pipe(finalize(() => this.submitting.set(false)))
+      .pipe(finalize(() => {
+        this.submitting.set(false);
+        this.quickLoginRole.set(null);
+      }))
       .subscribe({
         error: error => this.serverError.set(errorMessageKey(error))
       });
