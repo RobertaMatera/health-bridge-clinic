@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, computed, DestroyRef, inject, output, signal} from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
+import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {finalize} from 'rxjs';
 import {UsersService} from '@app/users/services/users-service';
 import {User} from '@app/users/models/user-model';
@@ -15,7 +15,7 @@ import {errorMessageKey} from '@app/commons/errors/error-message';
   imports: [ReactiveFormsModule, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <form novalidate class="flex flex-col gap-5" (ngSubmit)="submit()">
+    <form novalidate class="flex flex-col gap-5" [formGroup]="form" (ngSubmit)="submit()">
       @if (serverError(); as error) {
         <div class="alert-error" role="alert">
           <i class="fa-solid fa-circle-exclamation mt-0.5" aria-hidden="true"></i>
@@ -61,6 +61,8 @@ export class NewReportForm {
   cancel = output();
 
   protected readonly patientId = new FormControl<number | null>(null, Validators.required);
+  // Without a form directive (ngSubmit) never fires and the browser submits natively, reloading the page.
+  protected readonly form = new FormGroup({patientId: this.patientId});
   protected readonly patients = signal<User[]>([]);
   protected readonly loadingPatients = signal(true);
   protected readonly submitted = signal(false);
