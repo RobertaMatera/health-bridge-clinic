@@ -152,4 +152,4 @@ See [CHANGELOG.md](CHANGELOG.md) for the redesign changes that distinguish this 
 Code is provided under the MIT License. Design, logo, and screenshots are © Roberta Matera, all rights reserved.
 
 ## Author
-Roberta Matera — [Portfolio](https://robertamatera.vercel.app/en) · [LinkedIn](https://www.linkedin.com/in/roberta-matera/) · [GitHub](https://github.com/RobertaMatera))
+Roberta Matera — [Portfolio](https://www.robertamatera.com/en) · [LinkedIn](https://www.linkedin.com/in/roberta-matera/) · [GitHub](https://github.com/RobertaMatera)
