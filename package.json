@@ -1,0 +1,25 @@
+{
+  "name": "health-bridge-clinic",
+  "version": "1.0.0",
+  "description": "Health Bridge Clinic is a medical reports application for a private clinic. Doctors create and manage medical reports, add laboratory exams with reference ranges, and finalize clinical outcomes. Patients see only their own reports; Patients see only their own reports. Once a report is finalized, they can read the outcome in plain language and print a ready-to-share version.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobertaMatera/health-bridge-clinic.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RobertaMatera/health-bridge-clinic/issues"
+  },
+  "homepage": "https://github.com/RobertaMatera/health-bridge-clinic#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^26.6.6"
+  }
+}

@@ -52,7 +52,6 @@ frontend/.idea/
 frontend/*.swp
 frontend/*.swo
 frontend/*~
-frontend/.DS_Store
 
 # Angular CLI
 frontend/.angular/cache/
@@ -121,11 +120,16 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.bak
-*.swp
-*~
 
 # Archives
 *.zip
 *.tar.gz
 *.rar
 *.db
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
